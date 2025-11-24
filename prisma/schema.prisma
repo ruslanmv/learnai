@@ -1,0 +1,152 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  STUDENT
+  TEACHER
+  ADMIN
+}
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  COMPLETED
+  CANCELLED
+}
+
+enum TransactionStatus {
+  PENDING
+  PAID
+  FAILED
+  REFUNDED
+}
+
+model User {
+  id             String           @id @default(cuid())
+  name           String?
+  email          String?          @unique
+  emailVerified  DateTime?
+  image          String?
+  password       String?          // hashed for credentials login
+  role           Role             @default(STUDENT)
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+
+  accounts       Account[]
+  sessions       Session[]
+  teacherProfile TeacherProfile?
+  studentProfile StudentProfile?
+
+  teacherBookings   Booking[]      @relation("TeacherBookings")
+  studentBookings   Booking[]      @relation("StudentBookings")
+
+  teacherTransactions Transaction[] @relation("TeacherTransactions")
+  studentTransactions Transaction[] @relation("StudentTransactions")
+
+  _count          UserCount?      @ignore
+}
+
+model TeacherProfile {
+  id           String   @id @default(cuid())
+  user         User     @relation(fields: [userId], references: [id])
+  userId       String   @unique
+  title        String?
+  bio          String?
+  subjects     String[]
+  languages    String[]
+  hourlyRate   Decimal  @db.Decimal(10, 2)
+  paypalEmail  String?
+  isActive     Boolean  @default(true)
+  rating       Float    @default(0)
+  totalReviews Int      @default(0)
+}
+
+model StudentProfile {
+  id       String  @id @default(cuid())
+  user     User    @relation(fields: [userId], references: [id])
+  userId   String  @unique
+  country  String?
+  timezone String?
+}
+
+model Booking {
+  id               String         @id @default(cuid())
+  student          User           @relation("StudentBookings", fields: [studentId], references: [id])
+  studentId        String
+  teacher          User           @relation("TeacherBookings", fields: [teacherId], references: [id])
+  teacherId        String
+  subject          String
+  topic            String?
+  status           BookingStatus  @default(PENDING)
+  scheduledFor     DateTime
+  durationMinutes  Int
+  teamsMeetingUrl  String?
+  whiteboardId     String?
+  priceTotal       Decimal        @db.Decimal(10, 2)
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+
+  transaction      Transaction?
+}
+
+model Transaction {
+  id               String            @id @default(cuid())
+  booking          Booking           @relation(fields: [bookingId], references: [id])
+  bookingId        String            @unique
+  student          User              @relation("StudentTransactions", fields: [studentId], references: [id])
+  studentId        String
+  teacher          User              @relation("TeacherTransactions", fields: [teacherId], references: [id])
+  teacherId        String
+  amountTotal      Decimal           @db.Decimal(10, 2)
+  amountTeacher    Decimal           @db.Decimal(10, 2)
+  platformFee      Decimal           @db.Decimal(10, 2)
+  currency         String            @default("USD")
+  status           TransactionStatus @default(PENDING)
+  paypalOrderId    String?
+  paypalCaptureId  String?
+  paypalPayoutId   String?
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+}
+
+model Account {
+  id                 String  @id @default(cuid())
+  userId             String
+  type               String
+  provider           String
+  providerAccountId  String
+  refresh_token      String?  @db.Text
+  access_token       String?  @db.Text
+  expires_at         Int?
+  token_type         String?
+  scope              String?
+  id_token           String?  @db.Text
+  session_state      String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
