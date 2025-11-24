@@ -1,0 +1,33 @@
+# Dependencies
+node_modules
+npm-debug.log
+
+# Next.js
+.next
+out
+
+# Environment
+.env*
+!.env.example
+
+# Git
+.git
+.gitignore
+
+# Development files
+README.md
+CHANGELOG.md
+CONTRIBUTING.md
+.vscode
+.idea
+
+# Testing
+coverage
+*.test.ts
+*.test.tsx
+*.spec.ts
+*.spec.tsx
+
+# Misc
+.DS_Store
+*.log

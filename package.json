@@ -1,18 +1,57 @@
 {
   "name": "learnai-portal",
   "version": "1.0.0",
+  "description": "AI-powered tutoring marketplace connecting students with expert professors",
+  "author": {
+    "name": "Ruslan Magana",
+    "url": "https://ruslanmv.com"
+  },
+  "license": "MIT",
   "private": true,
+  "homepage": "https://ruslanmv.com",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ruslanmv/learnai"
+  },
+  "keywords": [
+    "education",
+    "ai",
+    "tutoring",
+    "marketplace",
+    "nextjs",
+    "typescript",
+    "openai",
+    "learning-platform"
+  ],
+  "engines": {
+    "node": ">=18.17.0",
+    "npm": ">=9.0.0"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "lint:fix": "next lint --fix",
+    "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,css,md}\"",
+    "format:check": "prettier --check \"**/*.{js,jsx,ts,tsx,json,css,md}\"",
+    "type-check": "tsc --noEmit",
+    "validate": "npm run lint && npm run type-check && npm run format:check",
     "prisma:generate": "prisma generate",
-    "prisma:push": "prisma db push"
+    "prisma:push": "prisma db push",
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:studio": "prisma studio",
+    "prisma:reset": "prisma migrate reset",
+    "postinstall": "prisma generate",
+    "clean": "rm -rf .next out build dist .vercel",
+    "clean:all": "npm run clean && rm -rf node_modules package-lock.json",
+    "analyze": "ANALYZE=true next build",
+    "prepare": "husky install || true"
   },
   "dependencies": {
     "@prisma/client": "^5.19.0",
     "@paypal/checkout-server-sdk": "^1.0.3",
+    "@next-auth/prisma-adapter": "^1.0.7",
     "bcryptjs": "^2.4.3",
     "next": "14.1.0",
     "next-auth": "^4.24.5",
@@ -20,19 +59,37 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-icons": "^5.2.1",
-    "tldraw": "^2.6.3"
+    "tldraw": "^2.6.3",
+    "zod": "^3.22.4"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.2",
     "@types/node": "20.10.6",
     "@types/react": "18.2.37",
     "@types/react-dom": "18.2.15",
+    "@typescript-eslint/eslint-plugin": "^6.15.0",
+    "@typescript-eslint/parser": "^6.15.0",
     "autoprefixer": "10.4.16",
     "eslint": "8.56.0",
     "eslint-config-next": "14.1.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.1.2",
+    "husky": "^8.0.3",
+    "lint-staged": "^15.2.0",
     "postcss": "8.4.33",
+    "prettier": "^3.1.1",
+    "prettier-plugin-tailwindcss": "^0.5.9",
     "prisma": "^5.19.0",
     "tailwindcss": "3.4.1",
     "typescript": "5.3.3"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,css,md}": [
+      "prettier --write"
+    ]
   }
 }
