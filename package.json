@@ -59,7 +59,7 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-icons": "^5.2.1",
-    "tldraw": "^2.6.3",
+    "tldraw": "^2.4.6",
     "zod": "^3.22.4"
   },
   "devDependencies": {
