@@ -4,6 +4,8 @@
 [![Next.js](https://img.shields.io/badge/Next.js-14-black)](https://nextjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.3-blue)](https://www.typescriptlang.org/)
 [![Vercel](https://img.shields.io/badge/Deploy-Vercel-black)](https://vercel.com)
+[![Production Ready](https://img.shields.io/badge/Production-Ready-green.svg)](./DEPLOYMENT.md)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](./CONTRIBUTING.md)
 
 > **Production-ready AI-orchestrated tutoring marketplace connecting students with expert professors**
 
@@ -299,22 +301,49 @@ make build
 
 ## 🌐 Deployment
 
-### Deploy to Vercel (Recommended)
+### One-Click Deploy to Vercel ⚡
 
-#### Method 1: Using Vercel CLI
+The fastest way to get started:
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fruslanmv%2Flearnai&env=DATABASE_URL,NEXTAUTH_URL,NEXTAUTH_SECRET,GOOGLE_CLIENT_ID,GOOGLE_CLIENT_SECRET,OPENAI_API_KEY,PAYPAL_CLIENT_ID,PAYPAL_CLIENT_SECRET,PAYPAL_ENVIRONMENT&envDescription=Required%20environment%20variables%20for%20LearnAI&envLink=https%3A%2F%2Fgithub.com%2Fruslanmv%2Flearnai%2Fblob%2Fmain%2F.env.example&project-name=learnai&repository-name=learnai)
+
+**Note**: You'll need to configure environment variables after clicking the button.
+
+### Production Deployment Guide
+
+For comprehensive deployment instructions, see our detailed guides:
+
+- 📘 **[Complete Deployment Guide](./DEPLOYMENT.md)** - Covers all platforms
+- 🚀 **[Vercel-Specific Guide](./VERCEL_DEPLOYMENT.md)** - Step-by-step Vercel setup
+- ✅ **[Production Checklist](./PRODUCTION_CHECKLIST.md)** - Pre-deployment verification
+
+### Quick Deploy Options
+
+#### Method 1: Git Integration (Recommended for Teams)
+
+```bash
+# Push to GitHub
+git push origin main
+
+# Import to Vercel
+1. Visit https://vercel.com/new
+2. Import your repository
+3. Configure environment variables
+4. Deploy (auto-deploys on every push)
+```
+
+#### Method 2: Vercel CLI (Recommended for Developers)
 
 ```bash
 # Install Vercel CLI
 npm install -g vercel
 
-# Deploy
-vercel
-
-# Deploy to production
+# Login and deploy
+vercel login
 vercel --prod
 ```
 
-#### Method 2: Using Makefile
+#### Method 3: Using Makefile
 
 ```bash
 # Deploy to production
@@ -324,38 +353,67 @@ make deploy-vercel
 make deploy-vercel-preview
 ```
 
-#### Method 3: Git Integration
+### Required Environment Variables
 
-1. Push your code to GitHub/GitLab/Bitbucket
-2. Import project on [Vercel](https://vercel.com)
-3. Configure environment variables in Vercel dashboard
-4. Deploy automatically on every push
+Add these in **Vercel Dashboard → Settings → Environment Variables**:
 
-### Environment Variables on Vercel
+| Variable | Required | Description |
+|----------|----------|-------------|
+| `DATABASE_URL` | ✅ | PostgreSQL connection string |
+| `NEXTAUTH_URL` | ✅ | Production domain URL |
+| `NEXTAUTH_SECRET` | ✅ | Random secret (32+ chars) |
+| `GOOGLE_CLIENT_ID` | ✅ | Google OAuth Client ID |
+| `GOOGLE_CLIENT_SECRET` | ✅ | Google OAuth Secret |
+| `OPENAI_API_KEY` | ✅ | OpenAI API Key |
+| `PAYPAL_CLIENT_ID` | ✅ | PayPal Client ID (Live) |
+| `PAYPAL_CLIENT_SECRET` | ✅ | PayPal Secret (Live) |
+| `PAYPAL_ENVIRONMENT` | ✅ | `live` for production |
 
-Add these in **Project Settings → Environment Variables**:
+**📝 Tip**: Use `.env.production.example` as a template for all variables.
 
-```
-DATABASE_URL
-NEXTAUTH_URL
-NEXTAUTH_SECRET
-GOOGLE_CLIENT_ID
-GOOGLE_CLIENT_SECRET
-OPENAI_API_KEY
-PAYPAL_CLIENT_ID
-PAYPAL_CLIENT_SECRET
-PAYPAL_ENVIRONMENT
-```
+### Database Setup for Production
 
-### Database Migrations in Production
+Recommended managed PostgreSQL providers:
+
+| Provider | Free Tier | Best For | Setup Time |
+|----------|-----------|----------|------------|
+| **[Supabase](https://supabase.com)** | ✅ 500MB | Full-stack apps | 5 min |
+| **[Neon](https://neon.tech)** | ✅ 1GB | Serverless, auto-scaling | 3 min |
+| **[Vercel Postgres](https://vercel.com/storage/postgres)** | ✅ 256MB | Vercel integration | 2 min |
+| **[Railway](https://railway.app)** | ✅ 512MB | Easy deployment | 5 min |
+
+After setting up your database:
 
 ```bash
-# Run migrations against production database
+# Set DATABASE_URL locally (temporarily)
+export DATABASE_URL="your-production-database-url"
+
+# Run migrations
 npx prisma db push
 
-# Or create a migration
+# Or create migration
 npx prisma migrate deploy
 ```
+
+### Health Check
+
+After deployment, verify your application is running:
+
+```bash
+curl https://your-domain.com/health
+
+# Expected response:
+# {"status":"healthy","timestamp":"...","checks":{...}}
+```
+
+### Post-Deployment
+
+- ✅ Test all critical features (login, payments, AI recommendations)
+- ✅ Set up monitoring (Sentry, Vercel Analytics)
+- ✅ Configure custom domain
+- ✅ Enable SSL/HTTPS
+- ✅ Set up uptime monitoring
+- ✅ Review [Production Checklist](./PRODUCTION_CHECKLIST.md)
 
 ---
 
