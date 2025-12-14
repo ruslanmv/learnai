@@ -1,6 +1,7 @@
 import "./globals.css";
 import type { ReactNode } from "react";
 import { SessionProviderWrapper } from "@/components/SessionProviderWrapper";
+import Link from "next/link";
 
 export const metadata = {
   title: "LearnAI - Connect with Expert Professors",
@@ -18,39 +19,39 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             <header className="sticky top-0 z-40 bg-white shadow-sm">
               <nav className="container mx-auto px-4 py-4">
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-2">
+                  <Link href="/" className="flex items-center space-x-2">
                     <div className="h-8 w-8 rounded-lg bg-primary" />
                     <span className="text-xl font-bold text-dark">LearnAI</span>
-                  </div>
+                  </Link>
 
                   <div className="hidden space-x-8 text-sm md:flex">
-                    <a href="/" className="text-gray-600 transition-colors hover:text-primary">
+                    <Link href="/" className="text-gray-600 transition-colors hover:text-primary">
                       Home
-                    </a>
-                    <a
+                    </Link>
+                    <Link
                       href="/dashboard"
                       className="text-gray-600 transition-colors hover:text-primary"
                     >
                       Professors
-                    </a>
-                    <a
-                      href="#pricing"
+                    </Link>
+                    <Link
+                      href="/pricing"
                       className="text-gray-600 transition-colors hover:text-primary"
                     >
                       Pricing
-                    </a>
-                    <a href="#about" className="text-gray-600 transition-colors hover:text-primary">
+                    </Link>
+                    <Link href="/about" className="text-gray-600 transition-colors hover:text-primary">
                       About
-                    </a>
+                    </Link>
                   </div>
 
                   <div className="flex items-center space-x-4">
-                    <a
+                    <Link
                       href="/login"
                       className="rounded-lg bg-primary px-6 py-2 text-sm font-medium text-white transition-colors hover:bg-secondary"
                     >
                       Get Started
-                    </a>
+                    </Link>
                     <button className="text-gray-600 md:hidden">
                       <span className="sr-only">Open menu</span>☰
                     </button>
@@ -71,30 +72,41 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                       Connecting students with expert professors through AI-powered matching and
                       interactive learning tools.
                     </p>
+                    <p className="mt-4 text-sm text-gray-400">
+                      Created by{" "}
+                      <a
+                        href="https://ruslanmv.com"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-primary hover:underline"
+                      >
+                        Ruslan Magana
+                      </a>
+                    </p>
                   </div>
 
                   <div>
                     <h3 className="mb-4 text-lg font-semibold">For Students</h3>
                     <ul className="space-y-2 text-sm text-gray-400">
                       <li>
-                        <a href="/dashboard" className="transition-colors hover:text-white">
+                        <Link href="/dashboard" className="transition-colors hover:text-white">
                           Find Professors
-                        </a>
+                        </Link>
                       </li>
                       <li>
-                        <a href="/dashboard" className="transition-colors hover:text-white">
+                        <Link href="/dashboard" className="transition-colors hover:text-white">
                           Book Sessions
-                        </a>
+                        </Link>
                       </li>
                       <li>
-                        <a href="/dashboard" className="transition-colors hover:text-white">
+                        <Link href="/dashboard" className="transition-colors hover:text-white">
                           Learning Dashboard
-                        </a>
+                        </Link>
                       </li>
                       <li>
-                        <a href="/login" className="transition-colors hover:text-white">
-                          Payment Options
-                        </a>
+                        <Link href="/pricing" className="transition-colors hover:text-white">
+                          Pricing
+                        </Link>
                       </li>
                     </ul>
                   </div>
@@ -103,42 +115,51 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                     <h3 className="mb-4 text-lg font-semibold">For Professors</h3>
                     <ul className="space-y-2 text-sm text-gray-400">
                       <li>
-                        <a href="/login" className="transition-colors hover:text-white">
+                        <Link href="/register" className="transition-colors hover:text-white">
                           Register to Teach
-                        </a>
+                        </Link>
                       </li>
                       <li>
-                        <a href="/login" className="transition-colors hover:text-white">
-                          Payment Setup
-                        </a>
+                        <Link href="/pricing" className="transition-colors hover:text-white">
+                          Payment Info
+                        </Link>
                       </li>
                       <li>
-                        <a href="/classroom/demo" className="transition-colors hover:text-white">
-                          Teaching Tools
-                        </a>
+                        <Link href="/about" className="transition-colors hover:text-white">
+                          About Platform
+                        </Link>
                       </li>
                       <li>
-                        <a href="/dashboard" className="transition-colors hover:text-white">
-                          Profile Management
-                        </a>
+                        <Link href="/dashboard" className="transition-colors hover:text-white">
+                          Dashboard
+                        </Link>
                       </li>
                     </ul>
                   </div>
 
                   <div>
-                    <h3 className="mb-4 text-lg font-semibold">Contact</h3>
+                    <h3 className="mb-4 text-lg font-semibold">Contact & Support</h3>
                     <ul className="space-y-2 text-sm text-gray-400">
                       <li>support@learnai.com</li>
-                      <li>+1 (555) 123-4567</li>
+                      <li>
+                        <a
+                          href="https://ruslanmv.com"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="transition-colors hover:text-white"
+                        >
+                          ruslanmv.com
+                        </a>
+                      </li>
                       <li className="mt-4 flex space-x-4 text-lg">
-                        <a href="#" className="transition-colors hover:text-white">
-                          f
-                        </a>
-                        <a href="#" className="transition-colors hover:text-white">
-                          t
-                        </a>
-                        <a href="#" className="transition-colors hover:text-white">
-                          in
+                        <a
+                          href="https://github.com/ruslanmv/learnai"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="transition-colors hover:text-white"
+                          aria-label="GitHub"
+                        >
+                          ⭐ GitHub
                         </a>
                       </li>
                     </ul>
@@ -147,6 +168,26 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 
                 <div className="mt-8 border-t border-gray-700 pt-8 text-center text-xs text-gray-400">
                   <p>© 2024 LearnAI. All rights reserved. Platform fee: 10%</p>
+                  <p className="mt-2">
+                    Open source project by{" "}
+                    <a
+                      href="https://ruslanmv.com"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-primary hover:underline"
+                    >
+                      Ruslan Magana
+                    </a>
+                    {" • "}
+                    <a
+                      href="https://github.com/ruslanmv/learnai"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-primary hover:underline"
+                    >
+                      Star on GitHub ⭐
+                    </a>
+                  </p>
                 </div>
               </div>
             </footer>
@@ -156,3 +197,4 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     </html>
   );
 }
+

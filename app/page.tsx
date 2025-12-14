@@ -1,5 +1,6 @@
 import HomeSearchClient from "@/components/HomeSearchClient";
 import { prisma } from "@/lib/prisma";
+import Link from "next/link";
 import {
   FaBrain,
   FaChalkboardTeacher,
@@ -39,12 +40,12 @@ export default async function HomePage() {
           </div>
 
           <div className="mb-4 flex flex-col justify-center gap-4 md:flex-row">
-            <a
+            <Link
               href="/login"
               className="rounded-lg bg-white px-8 py-4 font-semibold text-primary transition-colors hover:bg-gray-100"
             >
               Start Learning Today
-            </a>
+            </Link>
             <a
               href="#features"
               className="rounded-lg border-2 border-white px-8 py-4 font-semibold text-white transition-colors hover:bg-white hover:text-primary"
@@ -161,12 +162,12 @@ export default async function HomePage() {
                       <span className="text-sm font-semibold text-primary">
                         ${t.hourlyRate.toString()}/session
                       </span>
-                      <a
+                      <Link
                         href="/login"
                         className="rounded-lg bg-primary px-4 py-2 text-sm text-white transition-colors hover:bg-secondary"
                       >
                         Book Session
-                      </a>
+                      </Link>
                     </div>
                   </div>
                 </div>
@@ -196,12 +197,12 @@ export default async function HomePage() {
           </div>
 
           <div className="text-center">
-            <a
+            <Link
               href="/dashboard"
               className="rounded-lg bg-primary px-8 py-4 font-semibold text-white transition-colors hover:bg-secondary"
             >
               View All Professors
-            </a>
+            </Link>
           </div>
         </div>
       </section>
@@ -298,12 +299,12 @@ function ProfessorPlaceholder({
         <p className="mb-4 text-sm text-gray-600">{subject}</p>
         <div className="flex items-center justify-between">
           <span className="text-sm font-semibold text-primary">${price}/session</span>
-          <a
+          <Link
             href="/login"
             className="rounded-lg bg-primary px-4 py-2 text-sm text-white transition-colors hover:bg-secondary"
           >
             Book Session
-          </a>
+          </Link>
         </div>
       </div>
     </div>
