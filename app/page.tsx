@@ -1,4 +1,5 @@
 import HomeSearchClient from "@/components/HomeSearchClient";
+import { GuestModeButtons } from "@/components/GuestModeButtons";
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
 import {
@@ -39,20 +40,7 @@ export default async function HomePage() {
             </p>
           </div>
 
-          <div className="mb-4 flex flex-col justify-center gap-4 md:flex-row">
-            <Link
-              href="/login"
-              className="rounded-lg bg-white px-8 py-4 font-semibold text-primary transition-colors hover:bg-gray-100"
-            >
-              Start Learning Today
-            </Link>
-            <a
-              href="#features"
-              className="rounded-lg border-2 border-white px-8 py-4 font-semibold text-white transition-colors hover:bg-white hover:text-primary"
-            >
-              How It Works
-            </a>
-          </div>
+          <GuestModeButtons />
 
           {/* AI search & info cards */}
           <HomeSearchClient />
