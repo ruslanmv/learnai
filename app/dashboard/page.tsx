@@ -1,26 +1,12 @@
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { redirect } from "next/navigation";
+import Link from "next/link";
 
 export default async function DashboardPage() {
   const session = await getServerSession(authOptions);
-  if (!session?.user?.email) {
-    redirect("/login");
-  }
 
-  const user = await prisma.user.findUnique({
-    where: { email: session.user.email },
-    include: {
-      teacherProfile: true,
-      studentProfile: true,
-    },
-  });
-
-  if (!user) {
-    redirect("/login");
-  }
-
+  // Fetch data for both authenticated and guest users
   const [topTeachers, topStudents] = await Promise.all([
     prisma.teacherProfile.findMany({
       where: { isActive: true },
@@ -37,9 +23,133 @@ export default async function DashboardPage() {
     }),
   ]);
 
-  const isTeacher = user.role === "TEACHER";
-  const isAdmin = user.role === "ADMIN";
+  // Get user data if authenticated
+  let user: Awaited<ReturnType<typeof prisma.user.findUnique>> | null = null;
+  let isTeacher = false;
+  let isAdmin = false;
 
+  if (session?.user?.email) {
+    user = await prisma.user.findUnique({
+      where: { email: session.user.email },
+      include: {
+        teacherProfile: true,
+        studentProfile: true,
+      },
+    });
+    isTeacher = user?.role === "TEACHER";
+    isAdmin = user?.role === "ADMIN";
+  }
+
+  // Guest mode rendering
+  if (!user) {
+    return (
+      <div className="container mx-auto space-y-8 px-4 py-10">
+        {/* Guest Welcome Section */}
+        <div className="rounded-xl bg-gradient-to-r from-primary to-secondary p-8 text-white shadow-lg">
+          <h1 className="mb-4 text-3xl font-bold md:text-4xl">
+            👋 Welcome to LearnAI Explorer Mode!
+          </h1>
+          <p className="mb-6 text-lg opacity-90">
+            Browse our amazing professors and explore all features. When you&apos;re ready to book
+            sessions and start learning, just create a free account!
+          </p>
+          <div className="flex flex-col gap-3 sm:flex-row">
+            <Link
+              href="/register"
+              className="rounded-lg bg-white px-6 py-3 font-semibold text-primary transition-colors hover:bg-gray-100"
+            >
+              🚀 Sign Up Free
+            </Link>
+            <Link
+              href="/login"
+              className="rounded-lg border-2 border-white px-6 py-3 font-semibold text-white transition-colors hover:bg-white hover:text-primary"
+            >
+              Login
+            </Link>
+          </div>
+        </div>
+
+        {/* Professors Section for Guests */}
+        <section className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+          <div className="mb-4 flex items-center justify-between">
+            <h2 className="text-2xl font-semibold text-dark">Browse Top Professors</h2>
+            <span className="text-sm text-gray-500">All available for booking</span>
+          </div>
+
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {topTeachers.map((t) => (
+              <div
+                key={t.id}
+                className="group rounded-lg border border-gray-200 bg-gray-50 p-4 transition-shadow hover:shadow-md"
+              >
+                <div className="mb-3">
+                  <div className="mb-1 font-semibold text-gray-900">{t.user.name ?? "Professor"}</div>
+                  <div className="text-sm text-gray-600">
+                    {t.title || t.subjects.slice(0, 2).join(", ")}
+                  </div>
+                </div>
+                <div className="mb-3 flex items-center justify-between text-sm">
+                  <div className="flex items-center text-yellow-500">
+                    ⭐ <span className="ml-1 font-semibold">{t.rating.toFixed(1)}</span>
+                    <span className="ml-1 text-gray-500">({t.totalReviews})</span>
+                  </div>
+                  <div className="font-semibold text-primary">${t.hourlyRate.toString()}/hr</div>
+                </div>
+                <Link
+                  href="/register"
+                  className="block w-full rounded-lg bg-primary px-4 py-2 text-center text-sm font-semibold text-white transition-colors hover:bg-secondary"
+                >
+                  Sign Up to Book
+                </Link>
+              </div>
+            ))}
+          </div>
+
+          {topTeachers.length === 0 && (
+            <p className="py-8 text-center text-gray-500">
+              No professors available yet. Check back soon!
+            </p>
+          )}
+        </section>
+
+        {/* Features CTA */}
+        <div className="rounded-xl border-2 border-primary bg-blue-50 p-6">
+          <h3 className="mb-3 text-xl font-bold text-gray-900">
+            Ready to Start Learning? 🎓
+          </h3>
+          <p className="mb-4 text-gray-700">
+            Create your free account to unlock all features:
+          </p>
+          <ul className="mb-6 space-y-2 text-sm text-gray-700">
+            <li className="flex items-center">
+              <span className="mr-2 text-green-500">✓</span>
+              Book 1-on-1 sessions with expert professors
+            </li>
+            <li className="flex items-center">
+              <span className="mr-2 text-green-500">✓</span>
+              Access interactive whiteboard and video calls
+            </li>
+            <li className="flex items-center">
+              <span className="mr-2 text-green-500">✓</span>
+              Get AI-powered professor recommendations
+            </li>
+            <li className="flex items-center">
+              <span className="mr-2 text-green-500">✓</span>
+              Track your learning progress
+            </li>
+          </ul>
+          <Link
+            href="/register"
+            className="inline-block rounded-lg bg-primary px-6 py-3 font-semibold text-white transition-colors hover:bg-secondary"
+          >
+            Create Free Account →
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  // Authenticated user rendering
   return (
     <div className="container mx-auto space-y-8 px-4 py-10">
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
