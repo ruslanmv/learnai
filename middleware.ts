@@ -15,8 +15,9 @@ import type { NextRequest } from "next/server";
 
 /**
  * Protected routes that require authentication
+ * Note: /dashboard is now public (guest mode) - only actions like booking require auth
  */
-const protectedRoutes = ["/dashboard", "/classroom", "/bookings", "/profile"];
+const protectedRoutes = ["/classroom", "/bookings", "/profile"];
 
 /**
  * Admin-only routes
