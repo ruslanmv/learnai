@@ -48,8 +48,6 @@ model User {
 
   teacherTransactions Transaction[] @relation("TeacherTransactions")
   studentTransactions Transaction[] @relation("StudentTransactions")
-
-  _count          UserCount?      @ignore
 }
 
 model TeacherProfile {
