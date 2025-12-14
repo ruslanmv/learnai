@@ -12,7 +12,7 @@
 
 import OpenAI from "openai";
 import { prisma } from "./prisma";
-import type { TeacherProfileWithUser, ProfessorRecommendationResponse } from "@/types";
+import type { ProfessorRecommendationResponse, TeacherProfileWithUser } from "@/types";
 
 /**
  * Initialize OpenAI client with API key from environment
@@ -141,10 +141,7 @@ export async function recommendProfessors(
  * @returns {Promise<string>} AI-generated explanation
  * @private
  */
-async function generateAIExplanation(
-  query: string,
-  teacherSummaries: string
-): Promise<string> {
+async function generateAIExplanation(query: string, teacherSummaries: string): Promise<string> {
   if (!openai) {
     return "AI recommendations unavailable.";
   }

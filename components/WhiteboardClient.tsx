@@ -5,7 +5,7 @@ import "tldraw/tldraw.css";
 
 export function WhiteboardClient({ roomId }: { roomId: string }) {
   return (
-    <div className="w-full h-full">
+    <div className="h-full w-full">
       <Tldraw persistenceKey={roomId} />
     </div>
   );
