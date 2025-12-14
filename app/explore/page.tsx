@@ -74,24 +74,24 @@ export default async function ExplorePage() {
   }
 
   return (
-    <main className="min-h-screen bg-gray-50">
-      <header className="sticky top-0 z-40 border-b bg-white/80 backdrop-blur">
+    <main className="min-h-screen bg-gray-50 font-sans">
+      <header className="sticky top-0 z-50 bg-white shadow-sm">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4">
           <Link href="/" className="flex items-center gap-2">
-            <div className="h-8 w-8 rounded-lg bg-indigo-600" />
-            <span className="text-xl font-bold text-gray-900">LearnAI</span>
+            <div className="h-8 w-8 rounded-lg bg-primary" />
+            <span className="text-xl font-bold text-dark">LearnAI</span>
           </Link>
 
           <div className="flex items-center gap-3">
             <Link
               href="/"
-              className="rounded-xl border px-4 py-2 text-sm hover:bg-gray-50"
+              className="rounded-lg border px-4 py-2 text-sm hover:bg-gray-50"
             >
               Home
             </Link>
             <Link
               href="/login"
-              className="rounded-xl bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-violet-600"
+              className="rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white hover:bg-secondary"
             >
               Login
             </Link>
@@ -102,58 +102,46 @@ export default async function ExplorePage() {
       <section className="mx-auto max-w-6xl px-4 py-10">
         <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight text-gray-900">
-              Explore Professors
-            </h1>
+            <h1 className="text-3xl font-bold text-dark">Professors</h1>
             <p className="mt-2 text-gray-600">
-              Browse freely. Login only when you decide to book a session.
+              Browse freely. Login only when you decide to book.
             </p>
           </div>
 
           <div className="flex gap-2">
             <input
-              placeholder="Search (subject, name, language)…"
-              className="w-full rounded-xl border bg-white px-4 py-2 text-sm outline-none focus:ring-2 focus:ring-indigo-600 md:w-80"
+              placeholder="Search subject or name..."
+              className="w-full rounded-lg border bg-white px-4 py-2 text-sm outline-none focus:ring-2 focus:ring-primary md:w-80"
             />
-            <button className="rounded-xl bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-violet-600">
+            <button className="rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white hover:bg-secondary">
               Search
             </button>
           </div>
         </div>
 
-        <div className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-8 grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
           {professors.map((p) => (
-            <div
-              key={p.id}
-              className="overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-gray-200 hover:shadow-md"
-            >
+            <div key={p.id} className="overflow-hidden rounded-xl bg-white shadow-md">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={p.image} alt={p.name} className="h-44 w-full object-cover" />
-
+              <img src={p.image} alt={p.name} className="h-48 w-full object-cover" />
               <div className="p-6">
-                <div className="flex items-center justify-between">
-                  <h3 className="text-lg font-semibold">{p.name}</h3>
-                  <div className="flex items-center gap-1 text-yellow-500">
+                <div className="mb-3 flex items-center justify-between">
+                  <h3 className="text-xl font-semibold">{p.name}</h3>
+                  <div className="flex items-center gap-1 text-yellow-400">
                     <span>★</span>
-                    <span className="text-sm font-medium text-gray-700">
-                      {p.rating.toFixed(1)}
-                    </span>
+                    <span className="text-gray-700">{p.rating.toFixed(1)}</span>
                   </div>
                 </div>
-
-                <p className="mt-2 text-gray-600">{p.subject}</p>
-
-                <div className="mt-5 flex items-center justify-between">
-                  <span className="font-semibold text-indigo-600">€{p.price}/session</span>
-
+                <p className="mb-4 text-gray-600">{p.subject}</p>
+                <div className="flex items-center justify-between">
+                  <span className="font-semibold text-primary">€{p.price}/session</span>
                   <Link
                     href={`/bookings/new?professorId=${p.id}`}
-                    className="rounded-xl bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-violet-600"
+                    className="rounded-lg bg-primary px-4 py-2 text-sm text-white hover:bg-secondary"
                   >
                     Book
                   </Link>
                 </div>
-
                 <p className="mt-3 text-xs text-gray-500">
                   Booking may require login to confirm details.
                 </p>
