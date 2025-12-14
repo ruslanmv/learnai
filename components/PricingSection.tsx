@@ -25,7 +25,7 @@ export default function PricingSection() {
         "Session history & receipts",
         "Save favorites & progress",
       ],
-      cta: { label: "Book a Session", href: "/explore" },
+      cta: { label: "Start Booking", href: "/explore" },
       highlight: true,
     },
     {
@@ -46,48 +46,45 @@ export default function PricingSection() {
   return (
     <section id="pricing" className="bg-white py-20">
       <div className="mx-auto max-w-6xl px-4">
-        <h2 className="text-center text-3xl font-bold text-gray-900 md:text-4xl">
-          Simple, Transparent Pricing
+        <h2 className="text-center text-3xl font-bold text-dark md:text-4xl">
+          Simple Pricing
         </h2>
         <p className="mx-auto mt-4 max-w-2xl text-center text-gray-600">
-          Explore for free. Login only when you decide to book or save progress.
+          Explore freely. Login only when you decide to book or save progress.
         </p>
 
-        <div className="mt-12 grid grid-cols-1 gap-6 lg:grid-cols-3">
+        <div className="mt-12 grid grid-cols-1 gap-8 lg:grid-cols-3">
           {tiers.map((t) => (
             <div
               key={t.name}
               className={[
-                "rounded-2xl border p-8 shadow-sm",
+                "rounded-xl border p-8",
                 t.highlight
-                  ? "border-indigo-200 bg-gradient-to-b from-indigo-50 to-white ring-1 ring-indigo-200"
-                  : "border-gray-200 bg-white",
+                  ? "border-primary bg-gradient-to-b from-indigo-50 to-white shadow-md"
+                  : "border-gray-200 bg-gray-50",
               ].join(" ")}
             >
               <div className="flex items-start justify-between">
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-900">{t.name}</h3>
+                  <h3 className="text-lg font-semibold text-dark">{t.name}</h3>
                   <p className="mt-1 text-sm text-gray-600">{t.subtitle}</p>
                 </div>
-
                 {t.highlight ? (
-                  <span className="rounded-full bg-indigo-600 px-3 py-1 text-xs font-semibold text-white">
+                  <span className="rounded-full bg-primary px-3 py-1 text-xs font-semibold text-white">
                     Popular
                   </span>
                 ) : null}
               </div>
 
-              <div className="mt-6">
-                <div className="text-4xl font-bold text-gray-900">{t.price}</div>
-                <div className="mt-1 text-sm text-gray-600">
-                  {t.name === "For Professors" ? "of each session" : "per session"}
-                </div>
+              <div className="mt-6 text-4xl font-bold text-dark">{t.price}</div>
+              <div className="mt-1 text-sm text-gray-600">
+                {t.name === "For Professors" ? "of each session" : "per session"}
               </div>
 
               <ul className="mt-6 space-y-3 text-sm text-gray-700">
                 {t.features.map((f) => (
-                  <li key={f} className="flex items-start gap-2">
-                    <span className="mt-0.5 text-emerald-600">✓</span>
+                  <li key={f} className="flex gap-2">
+                    <span className="text-accent">✓</span>
                     <span>{f}</span>
                   </li>
                 ))}
@@ -96,10 +93,10 @@ export default function PricingSection() {
               <Link
                 href={t.cta.href}
                 className={[
-                  "mt-8 inline-flex w-full items-center justify-center rounded-xl px-4 py-3 text-sm font-semibold transition",
+                  "mt-8 inline-flex w-full items-center justify-center rounded-lg px-4 py-3 text-sm font-semibold transition-colors",
                   t.highlight
-                    ? "bg-indigo-600 text-white hover:bg-violet-600"
-                    : "border bg-white text-gray-900 hover:bg-gray-50",
+                    ? "bg-primary text-white hover:bg-secondary"
+                    : "bg-white text-dark border hover:bg-gray-50",
                 ].join(" ")}
               >
                 {t.cta.label}
