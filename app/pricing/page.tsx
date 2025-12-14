@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { FaCheck } from "react-icons/fa";
+import { AppLayout } from "@/components/AppLayout";
 
 // Force dynamic rendering for this page
 export const dynamic = "force-dynamic";
@@ -11,7 +12,8 @@ export const metadata = {
 
 export default function PricingPage() {
   return (
-    <div className="min-h-screen bg-gray-50">
+    <AppLayout>
+      <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
       <section className="bg-gradient-to-br from-primary to-secondary py-20 text-white">
         <div className="container mx-auto px-4 text-center">
@@ -228,6 +230,7 @@ export default function PricingPage() {
           </div>
         </div>
       </section>
-    </div>
+      </div>
+    </AppLayout>
   );
 }
