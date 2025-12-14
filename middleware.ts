@@ -88,12 +88,15 @@ export const config = {
   matcher: [
     /*
      * Match all request paths except:
+     * - / (homepage - public)
+     * - /explore (public professor browsing)
+     * - /login, /register (auth pages)
      * - _next/static (static files)
      * - _next/image (image optimization files)
      * - favicon.ico (favicon file)
      * - public folder
      * - API routes (handled separately)
      */
-    "/((?!api|_next/static|_next/image|favicon.ico|public).*)",
+    "/((?!api|_next/static|_next/image|favicon.ico|public|login|register|explore|$).*)",
   ],
 };
