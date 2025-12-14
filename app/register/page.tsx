@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { signIn } from "next-auth/react";
+import Link from "next/link";
 
 export default function RegisterPage() {
   const [form, setForm] = useState({
@@ -90,10 +91,17 @@ export default function RegisterPage() {
 
         <p className="mt-4 text-center text-xs text-gray-600">
           Already have an account?{" "}
-          <a href="/login" className="text-primary hover:underline">
-            Login
-          </a>
+          <Link href="/login" className="text-primary hover:underline">
+            Login here
+          </Link>
         </p>
+
+        <div className="mt-6 rounded-lg bg-blue-50 p-4">
+          <p className="text-xs text-gray-700">
+            <strong>Note:</strong> Are you a professor? After signing up, you can set up your teaching
+            profile in your dashboard to start earning money.
+          </p>
+        </div>
       </div>
     </div>
   );
