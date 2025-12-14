@@ -1,6 +1,7 @@
 import "./globals.css";
 import type { ReactNode } from "react";
 import { SessionProviderWrapper } from "@/components/SessionProviderWrapper";
+import { GuestBanner } from "@/components/GuestBanner";
 import Link from "next/link";
 
 export const metadata = {
@@ -14,6 +15,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     <html lang="en">
       <body className="min-h-screen bg-gray-50 font-sans antialiased">
         <SessionProviderWrapper>
+          <GuestBanner />
           <div className="flex min-h-screen flex-col">
             {/* Header */}
             <header className="sticky top-0 z-40 bg-white shadow-sm">
