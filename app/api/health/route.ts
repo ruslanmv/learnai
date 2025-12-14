@@ -1,5 +1,5 @@
-import { NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
+import { NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma";
 
 /**
  * Health Check Endpoint
@@ -17,23 +17,23 @@ import { prisma } from '@/lib/prisma';
  * - CI/CD pipeline verification
  */
 
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
 interface HealthCheckResponse {
-  status: 'healthy' | 'unhealthy' | 'degraded';
+  status: "healthy" | "unhealthy" | "degraded";
   timestamp: string;
   uptime: number;
   environment: string;
   version: string;
   checks: {
     database: {
-      status: 'up' | 'down';
+      status: "up" | "down";
       responseTime?: number;
       error?: string;
     };
     api: {
-      status: 'up';
+      status: "up";
       responseTime: number;
     };
   };
@@ -41,9 +41,9 @@ interface HealthCheckResponse {
 
 export async function GET() {
   const startTime = Date.now();
-  const checks: HealthCheckResponse['checks'] = {
-    database: { status: 'down' },
-    api: { status: 'up', responseTime: 0 },
+  const checks: HealthCheckResponse["checks"] = {
+    database: { status: "down" },
+    api: { status: "up", responseTime: 0 },
   };
 
   // Check database connectivity
@@ -53,13 +53,13 @@ export async function GET() {
     const dbResponseTime = Date.now() - dbStartTime;
 
     checks.database = {
-      status: 'up',
+      status: "up",
       responseTime: dbResponseTime,
     };
   } catch (error) {
     checks.database = {
-      status: 'down',
-      error: error instanceof Error ? error.message : 'Database connection failed',
+      status: "down",
+      error: error instanceof Error ? error.message : "Database connection failed",
     };
   }
 
@@ -67,15 +67,15 @@ export async function GET() {
   checks.api.responseTime = Date.now() - startTime;
 
   // Determine overall health status
-  const isHealthy = checks.database.status === 'up';
-  const status: HealthCheckResponse['status'] = isHealthy ? 'healthy' : 'degraded';
+  const isHealthy = checks.database.status === "up";
+  const status: HealthCheckResponse["status"] = isHealthy ? "healthy" : "degraded";
 
   const response: HealthCheckResponse = {
     status,
     timestamp: new Date().toISOString(),
     uptime: process.uptime(),
-    environment: process.env.NODE_ENV || 'development',
-    version: process.env.npm_package_version || '1.0.0',
+    environment: process.env.NODE_ENV || "development",
+    version: process.env.npm_package_version || "1.0.0",
     checks,
   };
 
@@ -85,7 +85,7 @@ export async function GET() {
   return NextResponse.json(response, {
     status: httpStatus,
     headers: {
-      'Cache-Control': 'no-store, max-age=0',
+      "Cache-Control": "no-store, max-age=0",
     },
   });
 }

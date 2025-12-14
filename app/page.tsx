@@ -1,6 +1,19 @@
 import HomeSearchClient from "@/components/HomeSearchClient";
 import { prisma } from "@/lib/prisma";
-import { FaRobot, FaChalkboardTeacher, FaCreditCard, FaBrain, FaVideo, FaMoneyBillWave, FaChartLine, FaGlobe, FaUserTie } from "react-icons/fa";
+import {
+  FaBrain,
+  FaChalkboardTeacher,
+  FaChartLine,
+  FaCreditCard,
+  FaGlobe,
+  FaMoneyBillWave,
+  FaRobot,
+  FaUserTie,
+  FaVideo,
+} from "react-icons/fa";
+
+// Force dynamic rendering for this page
+export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
   const topTeachers = await prisma.teacherProfile.findMany({
@@ -13,27 +26,28 @@ export default async function HomePage() {
   return (
     <>
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-primary to-secondary text-white py-20">
-        <div className="container mx-auto px-4 text-center space-y-10">
+      <section className="bg-gradient-to-br from-primary to-secondary py-20 text-white">
+        <div className="container mx-auto space-y-10 px-4 text-center">
           <div>
-            <h1 className="text-4xl md:text-6xl font-bold mb-6">
+            <h1 className="mb-6 text-4xl font-bold md:text-6xl">
               Learn Smarter with AI-Powered Tutoring
             </h1>
-            <p className="text-xl md:text-2xl mb-8 opacity-90 max-w-3xl mx-auto">
-              Connect with expert professors, schedule 1-on-1 sessions, and learn with interactive whiteboards.
+            <p className="mx-auto mb-8 max-w-3xl text-xl opacity-90 md:text-2xl">
+              Connect with expert professors, schedule 1-on-1 sessions, and learn with interactive
+              whiteboards.
             </p>
           </div>
 
-          <div className="flex flex-col md:flex-row justify-center gap-4 mb-4">
+          <div className="mb-4 flex flex-col justify-center gap-4 md:flex-row">
             <a
               href="/login"
-              className="bg-white text-primary px-8 py-4 rounded-lg font-semibold hover:bg-gray-100 transition-colors"
+              className="rounded-lg bg-white px-8 py-4 font-semibold text-primary transition-colors hover:bg-gray-100"
             >
               Start Learning Today
             </a>
             <a
               href="#features"
-              className="border-2 border-white text-white px-8 py-4 rounded-lg font-semibold hover:bg-white hover:text-primary transition-colors"
+              className="rounded-lg border-2 border-white px-8 py-4 font-semibold text-white transition-colors hover:bg-white hover:text-primary"
             >
               How It Works
             </a>
@@ -42,24 +56,24 @@ export default async function HomePage() {
           {/* AI search & info cards */}
           <HomeSearchClient />
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto mt-10">
-            <div className="bg-white bg-opacity-10 p-6 rounded-lg backdrop-blur-sm">
-              <FaRobot className="text-3xl mb-4" />
-              <h3 className="text-xl font-semibold mb-2">AI Professor Matching</h3>
+          <div className="mx-auto mt-10 grid max-w-4xl grid-cols-1 gap-8 md:grid-cols-3">
+            <div className="rounded-lg bg-white bg-opacity-10 p-6 backdrop-blur-sm">
+              <FaRobot className="mb-4 text-3xl" />
+              <h3 className="mb-2 text-xl font-semibold">AI Professor Matching</h3>
               <p className="text-sm">
                 Our AI finds the perfect professor based on your learning needs and preferences.
               </p>
             </div>
-            <div className="bg-white bg-opacity-10 p-6 rounded-lg backdrop-blur-sm">
-              <FaChalkboardTeacher className="text-3xl mb-4" />
-              <h3 className="text-xl font-semibold mb-2">Interactive Whiteboard</h3>
+            <div className="rounded-lg bg-white bg-opacity-10 p-6 backdrop-blur-sm">
+              <FaChalkboardTeacher className="mb-4 text-3xl" />
+              <h3 className="mb-2 text-xl font-semibold">Interactive Whiteboard</h3>
               <p className="text-sm">
                 Real-time collaboration with integrated whiteboard and Microsoft Teams.
               </p>
             </div>
-            <div className="bg-white bg-opacity-10 p-6 rounded-lg backdrop-blur-sm">
-              <FaCreditCard className="text-3xl mb-4" />
-              <h3 className="text-xl font-semibold mb-2">Secure Payments</h3>
+            <div className="rounded-lg bg-white bg-opacity-10 p-6 backdrop-blur-sm">
+              <FaCreditCard className="mb-4 text-3xl" />
+              <h3 className="mb-2 text-xl font-semibold">Secure Payments</h3>
               <p className="text-sm">
                 Pay per session with PayPal, professors receive 90% of payment.
               </p>
@@ -69,13 +83,13 @@ export default async function HomePage() {
       </section>
 
       {/* Features Section */}
-      <section id="features" className="py-20 bg-white">
+      <section id="features" className="bg-white py-20">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 text-dark">
+          <h2 className="mb-12 text-center text-3xl font-bold text-dark md:text-4xl">
             Why Choose LearnAI?
           </h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
             <FeatureCard
               icon={<FaBrain />}
               title="AI-Powered Matching"
@@ -117,41 +131,39 @@ export default async function HomePage() {
       </section>
 
       {/* Top Professors Section */}
-      <section className="py-20 bg-gray-50">
+      <section className="bg-gray-50 py-20">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 text-dark">
+          <h2 className="mb-12 text-center text-3xl font-bold text-dark md:text-4xl">
             Top Rated Professors
           </h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+          <div className="mb-12 grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
             {topTeachers.length > 0 ? (
               topTeachers.map((t, idx) => (
-                <div key={t.id} className="bg-white rounded-xl shadow-md overflow-hidden">
-                  <div className="w-full h-48 bg-gray-200 flex items-center justify-center text-gray-500 text-sm">
+                <div key={t.id} className="overflow-hidden rounded-xl bg-white shadow-md">
+                  <div className="flex h-48 w-full items-center justify-center bg-gray-200 text-sm text-gray-500">
                     {t.user.name ?? "Professor"} photo
                   </div>
                   <div className="p-6">
-                    <div className="flex items-center justify-between mb-3">
+                    <div className="mb-3 flex items-center justify-between">
                       <h3 className="text-xl font-semibold">
                         {t.user.name ?? `Professor #${idx + 1}`}
                       </h3>
-                      <div className="flex items-center text-yellow-400 text-sm">
+                      <div className="flex items-center text-sm text-yellow-400">
                         <span className="mr-1">★</span>
-                        <span className="text-gray-700">
-                          {t.rating.toFixed(1)}
-                        </span>
+                        <span className="text-gray-700">{t.rating.toFixed(1)}</span>
                       </div>
                     </div>
-                    <p className="text-gray-600 mb-4 text-sm">
+                    <p className="mb-4 text-sm text-gray-600">
                       {t.title || t.subjects.join(", ") || "Expert Professor"}
                     </p>
                     <div className="flex items-center justify-between">
-                      <span className="text-primary font-semibold text-sm">
+                      <span className="text-sm font-semibold text-primary">
                         ${t.hourlyRate.toString()}/session
                       </span>
                       <a
                         href="/login"
-                        className="bg-primary text-white px-4 py-2 rounded-lg text-sm hover:bg-secondary transition-colors"
+                        className="rounded-lg bg-primary px-4 py-2 text-sm text-white transition-colors hover:bg-secondary"
                       >
                         Book Session
                       </a>
@@ -186,7 +198,7 @@ export default async function HomePage() {
           <div className="text-center">
             <a
               href="/dashboard"
-              className="bg-primary text-white px-8 py-4 rounded-lg font-semibold hover:bg-secondary transition-colors"
+              className="rounded-lg bg-primary px-8 py-4 font-semibold text-white transition-colors hover:bg-secondary"
             >
               View All Professors
             </a>
@@ -195,13 +207,13 @@ export default async function HomePage() {
       </section>
 
       {/* How it works */}
-      <section className="py-20 bg-white" id="about">
+      <section className="bg-white py-20" id="about">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 text-dark">
+          <h2 className="mb-12 text-center text-3xl font-bold text-dark md:text-4xl">
             How LearnAI Works
           </h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-4">
             <StepCard
               step={1}
               title="Sign Up & Profile"
@@ -245,18 +257,16 @@ function FeatureCard({
   color: "primary" | "secondary" | "accent";
 }) {
   const bg =
-    color === "primary"
-      ? "bg-primary"
-      : color === "secondary"
-      ? "bg-secondary"
-      : "bg-accent";
+    color === "primary" ? "bg-primary" : color === "secondary" ? "bg-secondary" : "bg-accent";
   return (
-    <div className="bg-gray-50 p-6 rounded-xl border border-gray-200">
-      <div className={`w-12 h-12 ${bg} rounded-lg flex items-center justify-center text-white mb-4 text-xl`}>
+    <div className="rounded-xl border border-gray-200 bg-gray-50 p-6">
+      <div
+        className={`h-12 w-12 ${bg} mb-4 flex items-center justify-center rounded-lg text-xl text-white`}
+      >
         {icon}
       </div>
-      <h3 className="text-xl font-semibold mb-3">{title}</h3>
-      <p className="text-gray-600 text-sm">{description}</p>
+      <h3 className="mb-3 text-xl font-semibold">{title}</h3>
+      <p className="text-sm text-gray-600">{description}</p>
     </div>
   );
 }
@@ -273,26 +283,24 @@ function ProfessorPlaceholder({
   price: number;
 }) {
   return (
-    <div className="bg-white rounded-xl shadow-md overflow-hidden">
-      <div className="w-full h-48 bg-gray-200 flex items-center justify-center text-gray-500 text-sm">
+    <div className="overflow-hidden rounded-xl bg-white shadow-md">
+      <div className="flex h-48 w-full items-center justify-center bg-gray-200 text-sm text-gray-500">
         {name} photo
       </div>
       <div className="p-6">
-        <div className="flex items-center justify-between mb-3">
+        <div className="mb-3 flex items-center justify-between">
           <h3 className="text-xl font-semibold">{name}</h3>
-          <div className="flex items-center text-yellow-400 text-sm">
+          <div className="flex items-center text-sm text-yellow-400">
             <span className="mr-1">★</span>
             <span className="text-gray-700">{rating.toFixed(1)}</span>
           </div>
         </div>
-        <p className="text-gray-600 mb-4 text-sm">{subject}</p>
+        <p className="mb-4 text-sm text-gray-600">{subject}</p>
         <div className="flex items-center justify-between">
-          <span className="text-primary font-semibold text-sm">
-            ${price}/session
-          </span>
+          <span className="text-sm font-semibold text-primary">${price}/session</span>
           <a
             href="/login"
-            className="bg-primary text-white px-4 py-2 rounded-lg text-sm hover:bg-secondary transition-colors"
+            className="rounded-lg bg-primary px-4 py-2 text-sm text-white transition-colors hover:bg-secondary"
           >
             Book Session
           </a>
@@ -314,19 +322,17 @@ function StepCard({
   color: "primary" | "secondary" | "accent";
 }) {
   const bg =
-    color === "primary"
-      ? "bg-primary"
-      : color === "secondary"
-      ? "bg-secondary"
-      : "bg-accent";
+    color === "primary" ? "bg-primary" : color === "secondary" ? "bg-secondary" : "bg-accent";
 
   return (
     <div className="text-center">
-      <div className={`w-16 h-16 ${bg} rounded-full flex items-center justify-center text-white mx-auto mb-4`}>
+      <div
+        className={`h-16 w-16 ${bg} mx-auto mb-4 flex items-center justify-center rounded-full text-white`}
+      >
         <span className="text-xl font-bold">{step}</span>
       </div>
-      <h3 className="text-lg font-semibold mb-2">{title}</h3>
-      <p className="text-gray-600 text-sm">{description}</p>
+      <h3 className="mb-2 text-lg font-semibold">{title}</h3>
+      <p className="text-sm text-gray-600">{description}</p>
     </div>
   );
 }

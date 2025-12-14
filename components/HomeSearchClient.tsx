@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { FaRobot, FaChalkboardTeacher, FaCreditCard } from "react-icons/fa";
+import { FaChalkboardTeacher, FaCreditCard, FaRobot } from "react-icons/fa";
 
 export default function HomeSearchClient() {
   const [query, setQuery] = useState("");
@@ -11,7 +11,9 @@ export default function HomeSearchClient() {
 
   async function handleSearch(e: React.FormEvent) {
     e.preventDefault();
-    if (!query.trim()) return;
+    if (!query.trim()) {
+      return;
+    }
     setLoading(true);
     setError(null);
     setResult(null);
@@ -38,10 +40,7 @@ export default function HomeSearchClient() {
   return (
     <div className="space-y-8">
       {/* Search bar */}
-      <form
-        onSubmit={handleSearch}
-        className="flex flex-col md:flex-row gap-3 max-w-xl mx-auto"
-      >
+      <form onSubmit={handleSearch} className="mx-auto flex max-w-xl flex-col gap-3 md:flex-row">
         <input
           className="flex-1 rounded-lg border border-gray-300 bg-white px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
           placeholder="Describe what you want to learn (e.g. 'Linear algebra in Italian for exam preparation')"
@@ -51,53 +50,41 @@ export default function HomeSearchClient() {
         <button
           type="submit"
           disabled={loading}
-          className="rounded-lg bg-accent text-white px-6 py-3 text-sm font-semibold hover:bg-emerald-500 disabled:opacity-60"
+          className="rounded-lg bg-accent px-6 py-3 text-sm font-semibold text-white hover:bg-emerald-500 disabled:opacity-60"
         >
           {loading ? "Finding..." : "Find my professor"}
         </button>
       </form>
 
-      {error && (
-        <p className="text-center text-sm text-red-500 max-w-lg mx-auto">
-          {error}
-        </p>
-      )}
+      {error && <p className="mx-auto max-w-lg text-center text-sm text-red-500">{error}</p>}
 
       {result && (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+        <div className="mx-auto grid max-w-4xl grid-cols-1 gap-8 md:grid-cols-2">
           <div>
-            <h3 className="text-lg font-semibold mb-3 text-gray-800">
-              Suggested professors
-            </h3>
+            <h3 className="mb-3 text-lg font-semibold text-gray-800">Suggested professors</h3>
             <div className="space-y-3">
               {result.teachers?.map((t: any) => (
                 <div
                   key={t.id}
-                  className="bg-white border border-gray-200 rounded-xl p-4 flex flex-col gap-2"
+                  className="flex flex-col gap-2 rounded-xl border border-gray-200 bg-white p-4"
                 >
                   <div className="flex items-center justify-between">
                     <div>
                       <div className="font-semibold text-gray-900">{t.name ?? "Unknown"}</div>
-                      <div className="text-xs text-gray-500">
-                        {t.subjects?.join(", ")}
-                      </div>
+                      <div className="text-xs text-gray-500">{t.subjects?.join(", ")}</div>
                     </div>
                     <div className="text-right text-xs">
-                      <div className="text-yellow-500 font-medium">
+                      <div className="font-medium text-yellow-500">
                         ⭐ {Number(t.rating ?? 0).toFixed(1)}
                       </div>
-                      <div className="text-gray-500">
-                        {t.hourlyRate} $/h
-                      </div>
+                      <div className="text-gray-500">{t.hourlyRate} $/h</div>
                     </div>
                   </div>
-                  <p className="text-xs text-gray-600 line-clamp-3">
-                    {t.bio}
-                  </p>
+                  <p className="line-clamp-3 text-xs text-gray-600">{t.bio}</p>
                   <div className="flex justify-end">
                     <a
                       href="/login"
-                      className="inline-flex items-center gap-1 rounded-lg bg-primary text-white text-xs px-3 py-1.5 hover:bg-secondary"
+                      className="inline-flex items-center gap-1 rounded-lg bg-primary px-3 py-1.5 text-xs text-white hover:bg-secondary"
                     >
                       <FaChalkboardTeacher className="h-3 w-3" />
                       Book session
@@ -113,16 +100,15 @@ export default function HomeSearchClient() {
             </div>
           </div>
           <div>
-            <h3 className="text-lg font-semibold mb-3 text-gray-800">
-              AI explanation
-            </h3>
-            <div className="bg-white border border-gray-200 rounded-xl p-4 text-sm text-gray-700 whitespace-pre-line">
+            <h3 className="mb-3 text-lg font-semibold text-gray-800">AI explanation</h3>
+            <div className="whitespace-pre-line rounded-xl border border-gray-200 bg-white p-4 text-sm text-gray-700">
               {result.explanation || "AI explanation not available."}
             </div>
             <div className="mt-4 flex items-center gap-3 text-xs text-gray-500">
               <FaRobot />
               <span>
-                LearnAI assistant analyzes your request and the professor profiles to build the best match.
+                LearnAI assistant analyzes your request and the professor profiles to build the best
+                match.
               </span>
             </div>
           </div>
