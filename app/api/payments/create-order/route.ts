@@ -6,10 +6,7 @@ export async function POST(req: Request) {
   const { bookingId } = await req.json();
 
   if (!bookingId) {
-    return NextResponse.json(
-      { error: "bookingId is required" },
-      { status: 400 }
-    );
+    return NextResponse.json({ error: "bookingId is required" }, { status: 400 });
   }
 
   const booking = await prisma.booking.findUnique({
@@ -18,10 +15,7 @@ export async function POST(req: Request) {
   });
 
   if (!booking || !booking.transaction) {
-    return NextResponse.json(
-      { error: "Booking or transaction not found" },
-      { status: 404 }
-    );
+    return NextResponse.json({ error: "Booking or transaction not found" }, { status: 404 });
   }
 
   try {
@@ -54,9 +48,6 @@ export async function POST(req: Request) {
     });
   } catch (error: any) {
     console.error("PayPal create order error", error);
-    return NextResponse.json(
-      { error: "Failed to create PayPal order" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Failed to create PayPal order" }, { status: 500 });
   }
 }

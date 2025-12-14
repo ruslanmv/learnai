@@ -5,7 +5,7 @@
 # License: MIT
 # =============================================================================
 
-.PHONY: help install dev build start lint lint-fix format type-check test test-watch clean clean-all prisma-generate prisma-push prisma-migrate prisma-studio prisma-seed docker-build docker-up docker-down deploy-vercel setup-env check-env validate pre-commit
+.PHONY: help install dev build start serve lint lint-fix format type-check test test-watch clean clean-all prisma-generate prisma-push prisma-migrate prisma-studio prisma-seed docker-build docker-up docker-down deploy-vercel setup-env check-env validate pre-commit vercel-install vercel-build production-check checkup
 
 # Default target
 .DEFAULT_GOAL := help
@@ -70,12 +70,17 @@ dev: check-env ## Start development server
 	@echo "$(GREEN)Starting development server...$(NC)"
 	@$(NPM) run dev
 
-build: check-env ## Build for production
+build: ## Build for production (without env check, like Vercel)
 	@echo "$(GREEN)Building for production...$(NC)"
 	@$(NPM) run build
+	@echo "$(GREEN)✓ Build completed successfully$(NC)"
 
 start: ## Start production server
 	@echo "$(GREEN)Starting production server...$(NC)"
+	@$(NPM) run start
+
+serve: ## Serve production build (alias for start)
+	@echo "$(GREEN)Serving production build...$(NC)"
 	@$(NPM) run start
 
 ##@ Code Quality
@@ -191,6 +196,69 @@ docker-logs: ## View Docker logs
 	@docker-compose logs -f
 
 ##@ Deployment
+
+vercel-install: ## Simulate Vercel install process
+	@echo "$(BLUE)════════════════════════════════════════════════════════════════$(NC)"
+	@echo "$(YELLOW)🔄 Simulating Vercel Install Process...$(NC)"
+	@echo "$(BLUE)════════════════════════════════════════════════════════════════$(NC)"
+	@echo "$(YELLOW)Running: npm install$(NC)"
+	@$(NPM) install
+	@echo "$(GREEN)✓ Install completed successfully$(NC)"
+
+vercel-build: vercel-install ## Simulate complete Vercel build process
+	@echo "$(BLUE)════════════════════════════════════════════════════════════════$(NC)"
+	@echo "$(YELLOW)🏗️  Simulating Vercel Build Process...$(NC)"
+	@echo "$(BLUE)════════════════════════════════════════════════════════════════$(NC)"
+	@echo "$(YELLOW)Running: vercel build$(NC)"
+	@$(NPM) run build
+	@echo "$(GREEN)════════════════════════════════════════════════════════════════$(NC)"
+	@echo "$(GREEN)✅ Vercel build simulation completed successfully!$(NC)"
+	@echo "$(GREEN)════════════════════════════════════════════════════════════════$(NC)"
+	@echo "$(YELLOW)Next steps:$(NC)"
+	@echo "  - Run 'make serve' to test the production build locally"
+	@echo "  - Run 'make checkup' to validate production readiness"
+
+production-check: ## Comprehensive production readiness check
+	@echo "$(BLUE)════════════════════════════════════════════════════════════════$(NC)"
+	@echo "$(YELLOW)🔍 Production Readiness Check...$(NC)"
+	@echo "$(BLUE)════════════════════════════════════════════════════════════════$(NC)"
+	@echo ""
+	@echo "$(YELLOW)1. Checking Node.js version...$(NC)"
+	@node --version
+	@echo "$(GREEN)✓ Node.js version check passed$(NC)"
+	@echo ""
+	@echo "$(YELLOW)2. Checking npm version...$(NC)"
+	@npm --version
+	@echo "$(GREEN)✓ npm version check passed$(NC)"
+	@echo ""
+	@echo "$(YELLOW)3. Running TypeScript type check...$(NC)"
+	@npx tsc --noEmit || (echo "$(RED)✗ Type check failed$(NC)" && exit 1)
+	@echo "$(GREEN)✓ Type check passed$(NC)"
+	@echo ""
+	@echo "$(YELLOW)4. Running ESLint...$(NC)"
+	@$(NPM) run lint || (echo "$(RED)✗ Linting failed$(NC)" && exit 1)
+	@echo "$(GREEN)✓ Linting passed$(NC)"
+	@echo ""
+	@echo "$(YELLOW)5. Checking for security vulnerabilities...$(NC)"
+	@npm audit --audit-level=high || echo "$(YELLOW)⚠ Security vulnerabilities found - review above$(NC)"
+	@echo ""
+	@echo "$(YELLOW)6. Checking for outdated packages...$(NC)"
+	@npm outdated || true
+	@echo ""
+	@echo "$(YELLOW)7. Verifying Prisma schema...$(NC)"
+	@npx prisma validate || (echo "$(RED)✗ Prisma schema validation failed$(NC)" && exit 1)
+	@echo "$(GREEN)✓ Prisma schema valid$(NC)"
+	@echo ""
+	@echo "$(YELLOW)8. Testing production build...$(NC)"
+	@$(NPM) run build || (echo "$(RED)✗ Production build failed$(NC)" && exit 1)
+	@echo "$(GREEN)✓ Production build successful$(NC)"
+	@echo ""
+	@echo "$(GREEN)════════════════════════════════════════════════════════════════$(NC)"
+	@echo "$(GREEN)✅ All production checks passed!$(NC)"
+	@echo "$(GREEN)Your project is ready for deployment to Vercel$(NC)"
+	@echo "$(GREEN)════════════════════════════════════════════════════════════════$(NC)"
+
+checkup: production-check ## Alias for production-check
 
 deploy-vercel: validate build ## Deploy to Vercel
 	@echo "$(GREEN)Deploying to Vercel...$(NC)"

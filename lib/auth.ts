@@ -120,10 +120,7 @@ export const authOptions: NextAuthOptions = {
           }
 
           // Verify password
-          const isValidPassword = await bcrypt.compare(
-            credentials.password,
-            user.password
-          );
+          const isValidPassword = await bcrypt.compare(credentials.password, user.password);
 
           if (!isValidPassword) {
             throw new Error("Invalid email or password");
@@ -248,10 +245,7 @@ export const authOptions: NextAuthOptions = {
  * const hashed = await hashPassword('mypassword');
  * ```
  */
-export async function hashPassword(
-  password: string,
-  rounds: number = 12
-): Promise<string> {
+export async function hashPassword(password: string, rounds: number = 12): Promise<string> {
   if (!password || password.length < 8) {
     throw new Error("Password must be at least 8 characters long");
   }
@@ -270,9 +264,6 @@ export async function hashPassword(
  * const isValid = await verifyPassword('mypassword', hashedPassword);
  * ```
  */
-export async function verifyPassword(
-  password: string,
-  hash: string
-): Promise<boolean> {
+export async function verifyPassword(password: string, hash: string): Promise<boolean> {
   return await bcrypt.compare(password, hash);
 }

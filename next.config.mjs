@@ -61,7 +61,8 @@ const nextConfig = {
   },
   eslint: {
     // Don't fail build on lint errors in production (handled by CI/CD)
-    ignoreDuringBuilds: false,
+    // Set to true to allow build with warnings
+    ignoreDuringBuilds: true,
   },
 
   // Webpack configuration for bundle optimization

@@ -22,7 +22,6 @@ export function getPayPalClient() {
 
 export function splitAmounts(amountTotal: number) {
   const platformFee = Math.round(amountTotal * PLATFORM_FEE * 100) / 100;
-  const amountTeacher =
-    Math.round((amountTotal - platformFee) * 100) / 100;
+  const amountTeacher = Math.round((amountTotal - platformFee) * 100) / 100;
   return { amountTeacher, platformFee };
 }
