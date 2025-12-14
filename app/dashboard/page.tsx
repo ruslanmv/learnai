@@ -2,6 +2,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
+import { AppLayout } from "@/components/AppLayout";
 
 export default async function DashboardPage() {
   const session = await getServerSession(authOptions);
@@ -43,7 +44,8 @@ export default async function DashboardPage() {
   // Guest mode rendering
   if (!user) {
     return (
-      <div className="container mx-auto space-y-8 px-4 py-10">
+      <AppLayout>
+        <div className="container mx-auto space-y-8 px-4 py-10">
         {/* Guest Welcome Section */}
         <div className="rounded-xl bg-gradient-to-r from-primary to-secondary p-8 text-white shadow-lg">
           <h1 className="mb-4 text-3xl font-bold md:text-4xl">
@@ -145,13 +147,15 @@ export default async function DashboardPage() {
             Create Free Account →
           </Link>
         </div>
-      </div>
+        </div>
+      </AppLayout>
     );
   }
 
   // Authenticated user rendering
   return (
-    <div className="container mx-auto space-y-8 px-4 py-10">
+    <AppLayout>
+      <div className="container mx-auto space-y-8 px-4 py-10">
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
           <h1 className="text-2xl font-bold text-dark md:text-3xl">
@@ -247,6 +251,7 @@ export default async function DashboardPage() {
           </p>
         </section>
       )}
-    </div>
+      </div>
+    </AppLayout>
   );
 }
