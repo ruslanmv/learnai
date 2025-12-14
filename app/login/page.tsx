@@ -25,7 +25,8 @@ export default function LoginPage() {
   function continueAsGuest() {
     // Set guest mode in localStorage
     localStorage.setItem("guestMode", "true");
-    router.push("/dashboard");
+    // Redirect to home page to explore the platform
+    router.push("/");
   }
 
   return (

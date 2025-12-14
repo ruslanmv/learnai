@@ -2,6 +2,7 @@ import "./globals.css";
 import type { ReactNode } from "react";
 import { SessionProviderWrapper } from "@/components/SessionProviderWrapper";
 import { GuestBanner } from "@/components/GuestBanner";
+import { HeaderActions } from "@/components/HeaderActions";
 import Link from "next/link";
 
 export const metadata = {
@@ -48,12 +49,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                   </div>
 
                   <div className="flex items-center space-x-4">
-                    <Link
-                      href="/login"
-                      className="rounded-lg bg-primary px-6 py-2 text-sm font-medium text-white transition-colors hover:bg-secondary"
-                    >
-                      Get Started
-                    </Link>
+                    <HeaderActions />
                     <button className="text-gray-600 md:hidden">
                       <span className="sr-only">Open menu</span>☰
                     </button>
