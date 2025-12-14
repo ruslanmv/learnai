@@ -13,15 +13,7 @@ export async function POST(req: Request) {
   const { teachers, explanation } = await recommendProfessors(query);
 
   return NextResponse.json({
-    teachers: teachers.map((t) => ({
-      id: t.userId,
-      name: t.user.name,
-      title: t.title,
-      bio: t.bio,
-      subjects: t.subjects,
-      rating: t.rating,
-      hourlyRate: t.hourlyRate,
-    })),
+    teachers,
     explanation,
   });
 }
