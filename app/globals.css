@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Optional: nicer background + text smoothing */
+html, body {
+  height: 100%;
+}
+
 body {
-  @apply bg-gray-50;
+  @apply bg-gray-50 text-gray-900 antialiased;
 }
