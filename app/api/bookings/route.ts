@@ -10,14 +10,10 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const { teacherId, subject, topic, scheduledFor, durationMinutes, priceTotal } =
-    await req.json();
+  const { teacherId, subject, topic, scheduledFor, durationMinutes, priceTotal } = await req.json();
 
   if (!teacherId || !subject || !scheduledFor || !durationMinutes || !priceTotal) {
-    return NextResponse.json(
-      { error: "Missing required fields" },
-      { status: 400 }
-    );
+    return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
   }
 
   const student = await prisma.user.findUnique({

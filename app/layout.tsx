@@ -1,12 +1,6 @@
 import "./globals.css";
 import type { ReactNode } from "react";
 import { SessionProviderWrapper } from "@/components/SessionProviderWrapper";
-import { Inter } from "next/font/google";
-
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter",
-});
 
 export const metadata = {
   title: "LearnAI - Connect with Expert Professors",
@@ -17,29 +11,35 @@ export const metadata = {
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} font-sans min-h-screen bg-gray-50`}>
+      <body className="min-h-screen bg-gray-50 font-sans antialiased">
         <SessionProviderWrapper>
-          <div className="flex flex-col min-h-screen">
+          <div className="flex min-h-screen flex-col">
             {/* Header */}
-            <header className="bg-white shadow-sm sticky top-0 z-40">
+            <header className="sticky top-0 z-40 bg-white shadow-sm">
               <nav className="container mx-auto px-4 py-4">
-                <div className="flex justify-between items-center">
+                <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-2">
-                    <div className="w-8 h-8 bg-primary rounded-lg" />
+                    <div className="h-8 w-8 rounded-lg bg-primary" />
                     <span className="text-xl font-bold text-dark">LearnAI</span>
                   </div>
 
-                  <div className="hidden md:flex space-x-8 text-sm">
-                    <a href="/" className="text-gray-600 hover:text-primary transition-colors">
+                  <div className="hidden space-x-8 text-sm md:flex">
+                    <a href="/" className="text-gray-600 transition-colors hover:text-primary">
                       Home
                     </a>
-                    <a href="/dashboard" className="text-gray-600 hover:text-primary transition-colors">
+                    <a
+                      href="/dashboard"
+                      className="text-gray-600 transition-colors hover:text-primary"
+                    >
                       Professors
                     </a>
-                    <a href="#pricing" className="text-gray-600 hover:text-primary transition-colors">
+                    <a
+                      href="#pricing"
+                      className="text-gray-600 transition-colors hover:text-primary"
+                    >
                       Pricing
                     </a>
-                    <a href="#about" className="text-gray-600 hover:text-primary transition-colors">
+                    <a href="#about" className="text-gray-600 transition-colors hover:text-primary">
                       About
                     </a>
                   </div>
@@ -47,13 +47,12 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                   <div className="flex items-center space-x-4">
                     <a
                       href="/login"
-                      className="bg-primary text-white px-6 py-2 rounded-lg hover:bg-secondary transition-colors text-sm font-medium"
+                      className="rounded-lg bg-primary px-6 py-2 text-sm font-medium text-white transition-colors hover:bg-secondary"
                     >
                       Get Started
                     </a>
-                    <button className="md:hidden text-gray-600">
-                      <span className="sr-only">Open menu</span>
-                      ☰
+                    <button className="text-gray-600 md:hidden">
+                      <span className="sr-only">Open menu</span>☰
                     </button>
                   </div>
                 </div>
@@ -63,37 +62,37 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             <main className="flex-1">{children}</main>
 
             {/* Footer */}
-            <footer className="bg-dark text-white py-12 mt-8">
+            <footer className="mt-8 bg-dark py-12 text-white">
               <div className="container mx-auto px-4">
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div className="grid grid-cols-1 gap-8 md:grid-cols-4">
                   <div>
-                    <h3 className="text-lg font-semibold mb-4">LearnAI</h3>
-                    <p className="text-gray-400 text-sm">
-                      Connecting students with expert professors through AI-powered matching and interactive learning
-                      tools.
+                    <h3 className="mb-4 text-lg font-semibold">LearnAI</h3>
+                    <p className="text-sm text-gray-400">
+                      Connecting students with expert professors through AI-powered matching and
+                      interactive learning tools.
                     </p>
                   </div>
 
                   <div>
-                    <h3 className="text-lg font-semibold mb-4">For Students</h3>
-                    <ul className="space-y-2 text-gray-400 text-sm">
+                    <h3 className="mb-4 text-lg font-semibold">For Students</h3>
+                    <ul className="space-y-2 text-sm text-gray-400">
                       <li>
-                        <a href="/dashboard" className="hover:text-white transition-colors">
+                        <a href="/dashboard" className="transition-colors hover:text-white">
                           Find Professors
                         </a>
                       </li>
                       <li>
-                        <a href="/dashboard" className="hover:text-white transition-colors">
+                        <a href="/dashboard" className="transition-colors hover:text-white">
                           Book Sessions
                         </a>
                       </li>
                       <li>
-                        <a href="/dashboard" className="hover:text-white transition-colors">
+                        <a href="/dashboard" className="transition-colors hover:text-white">
                           Learning Dashboard
                         </a>
                       </li>
                       <li>
-                        <a href="/login" className="hover:text-white transition-colors">
+                        <a href="/login" className="transition-colors hover:text-white">
                           Payment Options
                         </a>
                       </li>
@@ -101,25 +100,25 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                   </div>
 
                   <div>
-                    <h3 className="text-lg font-semibold mb-4">For Professors</h3>
-                    <ul className="space-y-2 text-gray-400 text-sm">
+                    <h3 className="mb-4 text-lg font-semibold">For Professors</h3>
+                    <ul className="space-y-2 text-sm text-gray-400">
                       <li>
-                        <a href="/login" className="hover:text-white transition-colors">
+                        <a href="/login" className="transition-colors hover:text-white">
                           Register to Teach
                         </a>
                       </li>
                       <li>
-                        <a href="/login" className="hover:text-white transition-colors">
+                        <a href="/login" className="transition-colors hover:text-white">
                           Payment Setup
                         </a>
                       </li>
                       <li>
-                        <a href="/classroom/demo" className="hover:text-white transition-colors">
+                        <a href="/classroom/demo" className="transition-colors hover:text-white">
                           Teaching Tools
                         </a>
                       </li>
                       <li>
-                        <a href="/dashboard" className="hover:text-white transition-colors">
+                        <a href="/dashboard" className="transition-colors hover:text-white">
                           Profile Management
                         </a>
                       </li>
@@ -127,18 +126,18 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                   </div>
 
                   <div>
-                    <h3 className="text-lg font-semibold mb-4">Contact</h3>
-                    <ul className="space-y-2 text-gray-400 text-sm">
+                    <h3 className="mb-4 text-lg font-semibold">Contact</h3>
+                    <ul className="space-y-2 text-sm text-gray-400">
                       <li>support@learnai.com</li>
                       <li>+1 (555) 123-4567</li>
-                      <li className="flex space-x-4 mt-4 text-lg">
-                        <a href="#" className="hover:text-white transition-colors">
+                      <li className="mt-4 flex space-x-4 text-lg">
+                        <a href="#" className="transition-colors hover:text-white">
                           f
                         </a>
-                        <a href="#" className="hover:text-white transition-colors">
+                        <a href="#" className="transition-colors hover:text-white">
                           t
                         </a>
-                        <a href="#" className="hover:text-white transition-colors">
+                        <a href="#" className="transition-colors hover:text-white">
                           in
                         </a>
                       </li>
@@ -146,7 +145,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                   </div>
                 </div>
 
-                <div className="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400 text-xs">
+                <div className="mt-8 border-t border-gray-700 pt-8 text-center text-xs text-gray-400">
                   <p>© 2024 LearnAI. All rights reserved. Platform fee: 10%</p>
                 </div>
               </div>

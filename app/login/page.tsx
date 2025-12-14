@@ -20,20 +20,18 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex items-center justify-center min-h-[70vh] px-4">
-      <div className="w-full max-w-md bg-white rounded-xl shadow-md p-6 space-y-4">
-        <h1 className="text-2xl font-bold text-dark mb-2">
-          Welcome to LearnAI
-        </h1>
-        <p className="text-sm text-gray-600 mb-4">
+    <div className="flex min-h-[70vh] items-center justify-center px-4">
+      <div className="w-full max-w-md space-y-4 rounded-xl bg-white p-6 shadow-md">
+        <h1 className="mb-2 text-2xl font-bold text-dark">Welcome to LearnAI</h1>
+        <p className="mb-4 text-sm text-gray-600">
           Login with Google or your email to access your dashboard.
         </p>
 
         <button
           onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
-          className="w-full bg-white border border-gray-300 text-gray-700 px-4 py-3 rounded-lg hover:bg-gray-50 transition-colors flex items-center justify-center space-x-2 text-sm font-medium"
+          className="flex w-full items-center justify-center space-x-2 rounded-lg border border-gray-300 bg-white px-4 py-3 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50"
         >
-          <span className="text-red-500 text-lg">G</span>
+          <span className="text-lg text-red-500">G</span>
           <span>Continue with Google</span>
         </button>
 
@@ -48,25 +46,21 @@ export default function LoginPage() {
 
         <form onSubmit={handleCredentialsLogin} className="space-y-3 text-sm">
           <div>
-            <label className="block text-xs mb-1 text-gray-700">
-              Email address
-            </label>
+            <label className="mb-1 block text-xs text-gray-700">Email address</label>
             <input
               type="email"
               required
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-sm"
+              className="w-full rounded-lg border border-gray-300 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
           </div>
           <div>
-            <label className="block text-xs mb-1 text-gray-700">
-              Password
-            </label>
+            <label className="mb-1 block text-xs text-gray-700">Password</label>
             <input
               type="password"
               required
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-sm"
+              className="w-full rounded-lg border border-gray-300 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
@@ -74,13 +68,13 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-primary text-white px-4 py-3 rounded-lg font-semibold hover:bg-secondary transition-colors disabled:opacity-60"
+            className="w-full rounded-lg bg-primary px-4 py-3 font-semibold text-white transition-colors hover:bg-secondary disabled:opacity-60"
           >
             {loading ? "Signing in..." : "Continue with Email"}
           </button>
         </form>
 
-        <p className="text-center text-xs text-gray-600 mt-4">
+        <p className="mt-4 text-center text-xs text-gray-600">
           Don't have an account?{" "}
           <a href="/register" className="text-primary hover:underline">
             Sign up here
