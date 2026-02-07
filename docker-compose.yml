@@ -1,0 +1,15 @@
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: learnai
+      POSTGRES_USER: learnai
+      POSTGRES_PASSWORD: learnai
+    ports:
+      - "5432:5432"
+    volumes:
+      - learnai_pgdata:/var/lib/postgresql/data
+
+volumes:
+  learnai_pgdata:
