@@ -49,7 +49,7 @@ yarn.lock
 pnpm-lock.yaml
 
 # Prisma
-/prisma/migrations/
+# Note: migrations are version-controlled (needed for prisma migrate deploy)
 
 # Editor directories
 .vscode/*

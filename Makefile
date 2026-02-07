@@ -5,7 +5,11 @@
 # License: MIT
 # =============================================================================
 
-.PHONY: help install dev build start serve lint lint-fix format type-check test test-watch clean clean-all prisma-generate prisma-push prisma-migrate prisma-studio prisma-seed docker-build docker-up docker-down deploy-vercel setup-env check-env validate pre-commit vercel-install vercel-build production-check checkup
+.PHONY: help install install-deps dev build start serve lint lint-fix format format-check type-check test test-watch \
+	clean clean-all prisma-generate prisma-push prisma-migrate prisma-migrate-deploy prisma-studio prisma-seed prisma-reset \
+	db-up db-down db-logs db-reset db-wait db-setup docker-build docker-up docker-down docker-logs \
+	deploy-vercel deploy-vercel-preview setup-env check-env validate pre-commit \
+	vercel-install vercel-build production-check checkup setup info version
 
 # Default target
 .DEFAULT_GOAL := help
@@ -28,25 +32,26 @@ help: ## Display this help message
 	@echo "$(BLUE)════════════════════════════════════════════════════════════════$(NC)"
 	@echo "$(GREEN)  LearnAI - AI Tutor Marketplace$(NC)"
 	@echo "$(BLUE)════════════════════════════════════════════════════════════════$(NC)"
-	@awk 'BEGIN {FS = ":.*##"; printf "\nUsage:\n  make $(YELLOW)<target>$(NC)\n"} /^[a-zA-Z_0-9-]+:.*?##/ { printf "  $(YELLOW)%-20s$(NC) %s\n", $$1, $$2 } /^##@/ { printf "\n$(BLUE)%s$(NC)\n", substr($$0, 5) } ' $(MAKEFILE_LIST)
+	@awk 'BEGIN {FS = ":.*##"; printf "\nUsage:\n  make $(YELLOW)<target>$(NC)\n"} /^[a-zA-Z_0-9-]+:.*?##/ { printf "  $(YELLOW)%-25s$(NC) %s\n", $$1, $$2 } /^##@/ { printf "\n$(BLUE)%s$(NC)\n", substr($$0, 5) } ' $(MAKEFILE_LIST)
 	@echo ""
 
 ##@ Setup & Installation
 
-install: ## Install all dependencies
+install: install-deps setup-env db-up db-wait db-setup prisma-generate prisma-migrate-deploy prisma-seed ## One-command local install (deps + env + db + prisma)
+	@echo "$(GREEN)════════════════════════════════════════════════════════════════$(NC)"
+	@echo "$(GREEN)✓ Install complete!$(NC)"
+	@echo "$(YELLOW)Next: run 'make serve' for production, or 'make dev' for development.$(NC)"
+	@echo "$(GREEN)════════════════════════════════════════════════════════════════$(NC)"
+
+install-deps: ## Install Node.js dependencies
 	@echo "$(GREEN)Installing dependencies...$(NC)"
 	@$(NPM) install
 	@echo "$(GREEN)✓ Dependencies installed successfully$(NC)"
 
-setup-env: ## Create .env.local from .env.example
+setup-env: ## Create .env.local with safe local defaults
 	@echo "$(YELLOW)Setting up environment variables...$(NC)"
-	@if [ ! -f .env.local ]; then \
-		cp .env.example .env.local; \
-		echo "$(GREEN)✓ Created .env.local from .env.example$(NC)"; \
-		echo "$(YELLOW)⚠ Please edit .env.local with your configuration$(NC)"; \
-	else \
-		echo "$(YELLOW)⚠ .env.local already exists, skipping...$(NC)"; \
-	fi
+	@chmod +x scripts/*.sh 2>/dev/null || true
+	@./scripts/setup-env.sh
 
 check-env: ## Validate environment variables
 	@echo "$(YELLOW)Checking environment variables...$(NC)"
@@ -56,13 +61,7 @@ check-env: ## Validate environment variables
 	fi
 	@echo "$(GREEN)✓ Environment file exists$(NC)"
 
-setup: install setup-env prisma-generate ## Complete project setup (install + env + prisma)
-	@echo "$(GREEN)════════════════════════════════════════════════════════════════$(NC)"
-	@echo "$(GREEN)✓ Setup complete! Next steps:$(NC)"
-	@echo "  1. Edit .env.local with your configuration"
-	@echo "  2. Run 'make prisma-push' to setup database"
-	@echo "  3. Run 'make dev' to start development server"
-	@echo "$(GREEN)════════════════════════════════════════════════════════════════$(NC)"
+setup: install ## Alias for install
 
 ##@ Development
 
@@ -70,17 +69,17 @@ dev: check-env ## Start development server
 	@echo "$(GREEN)Starting development server...$(NC)"
 	@$(NPM) run dev
 
-build: ## Build for production (without env check, like Vercel)
+build: check-env prisma-generate ## Build for production
 	@echo "$(GREEN)Building for production...$(NC)"
 	@$(NPM) run build
 	@echo "$(GREEN)✓ Build completed successfully$(NC)"
 
-start: ## Start production server
+start: ## Start production server (expects existing .next build)
 	@echo "$(GREEN)Starting production server...$(NC)"
 	@$(NPM) run start
 
-serve: ## Serve production build (alias for start)
-	@echo "$(GREEN)Serving production build...$(NC)"
+serve: check-env db-up db-wait db-setup prisma-migrate-deploy build ## Build then start production server
+	@echo "$(GREEN)Starting production server...$(NC)"
 	@$(NPM) run start
 
 ##@ Code Quality
@@ -132,18 +131,24 @@ prisma-push: check-env ## Push schema changes to database (dev)
 	@$(NPM) run prisma:push
 	@echo "$(GREEN)✓ Schema pushed to database$(NC)"
 
-prisma-migrate: check-env ## Create and run migrations (production)
+prisma-migrate: check-env ## Create and run migrations (interactive dev)
 	@echo "$(YELLOW)Creating migration...$(NC)"
 	@npx prisma migrate dev
 	@echo "$(GREEN)✓ Migration complete$(NC)"
+
+prisma-migrate-deploy: check-env ## Apply existing migrations (non-interactive, production-safe)
+	@echo "$(YELLOW)Applying database migrations (deploy)...$(NC)"
+	@npx prisma migrate deploy
+	@echo "$(GREEN)✓ Migrations applied$(NC)"
 
 prisma-studio: check-env ## Open Prisma Studio
 	@echo "$(GREEN)Opening Prisma Studio...$(NC)"
 	@npx prisma studio
 
-prisma-seed: check-env ## Seed database with sample data
+prisma-seed: check-env ## Seed database with demo data
 	@echo "$(YELLOW)Seeding database...$(NC)"
-	@echo "$(YELLOW)⚠ No seed script configured. Add to package.json$(NC)"
+	@$(NPM) run prisma:seed
+	@echo "$(GREEN)✓ Seed complete$(NC)"
 
 prisma-reset: check-env ## Reset database (WARNING: deletes all data)
 	@echo "$(RED)⚠ WARNING: This will delete all data!$(NC)"
@@ -175,6 +180,48 @@ clean-all: clean ## Clean everything including node_modules
 	@rm -rf pnpm-lock.yaml
 	@echo "$(GREEN)✓ Clean all complete$(NC)"
 
+##@ Local Database (Docker Compose or native)
+
+db-up: ## Start local PostgreSQL (Docker preferred, falls back to native)
+	@echo "$(GREEN)Starting local database (PostgreSQL)...$(NC)"
+	@if pg_isready -h localhost -p 5432 >/dev/null 2>&1; then \
+		echo "$(GREEN)✓ PostgreSQL is already running (native/system)$(NC)"; \
+	elif docker compose up -d db 2>/dev/null; then \
+		echo "$(GREEN)✓ Database container is starting$(NC)"; \
+	elif sudo pg_ctlcluster 16 main start 2>/dev/null; then \
+		echo "$(GREEN)✓ Started native PostgreSQL$(NC)"; \
+	elif sudo service postgresql start 2>/dev/null; then \
+		echo "$(GREEN)✓ Started PostgreSQL service$(NC)"; \
+	else \
+		echo "$(RED)✗ Could not start PostgreSQL. Please start it manually or install Docker.$(NC)"; \
+		exit 1; \
+	fi
+
+db-down: ## Stop local PostgreSQL
+	@echo "$(YELLOW)Stopping local database...$(NC)"
+	@docker compose down
+	@echo "$(GREEN)✓ Database stopped$(NC)"
+
+db-logs: ## Tail local PostgreSQL logs
+	@docker compose logs -f db
+
+db-reset: ## Reset local PostgreSQL (WARNING: deletes all data)
+	@echo "$(RED)⚠ WARNING: This will delete all local DB data (docker volume)!$(NC)"
+	@read -p "Are you sure? [y/N] " -n 1 -r; \
+	echo; \
+	if [[ $$REPLY =~ ^[Yy]$$ ]]; then \
+		docker compose down -v; \
+		echo "$(GREEN)✓ Local DB reset complete$(NC)"; \
+	else \
+		echo "$(YELLOW)Cancelled$(NC)"; \
+	fi
+
+db-wait: ## Wait until PostgreSQL is ready
+	@./scripts/wait-for-postgres.sh
+
+db-setup: ## Create learnai database and user (for native PostgreSQL)
+	@./scripts/setup-db.sh
+
 ##@ Docker (Optional)
 
 docker-build: ## Build Docker image
@@ -199,7 +246,7 @@ docker-logs: ## View Docker logs
 
 vercel-install: ## Simulate Vercel install process
 	@echo "$(BLUE)════════════════════════════════════════════════════════════════$(NC)"
-	@echo "$(YELLOW)🔄 Simulating Vercel Install Process...$(NC)"
+	@echo "$(YELLOW)Simulating Vercel Install Process...$(NC)"
 	@echo "$(BLUE)════════════════════════════════════════════════════════════════$(NC)"
 	@echo "$(YELLOW)Running: npm install$(NC)"
 	@$(NPM) install
@@ -207,12 +254,12 @@ vercel-install: ## Simulate Vercel install process
 
 vercel-build: vercel-install ## Simulate complete Vercel build process
 	@echo "$(BLUE)════════════════════════════════════════════════════════════════$(NC)"
-	@echo "$(YELLOW)🏗️  Simulating Vercel Build Process...$(NC)"
+	@echo "$(YELLOW)Simulating Vercel Build Process...$(NC)"
 	@echo "$(BLUE)════════════════════════════════════════════════════════════════$(NC)"
 	@echo "$(YELLOW)Running: vercel build$(NC)"
 	@$(NPM) run build
 	@echo "$(GREEN)════════════════════════════════════════════════════════════════$(NC)"
-	@echo "$(GREEN)✅ Vercel build simulation completed successfully!$(NC)"
+	@echo "$(GREEN)✓ Vercel build simulation completed successfully!$(NC)"
 	@echo "$(GREEN)════════════════════════════════════════════════════════════════$(NC)"
 	@echo "$(YELLOW)Next steps:$(NC)"
 	@echo "  - Run 'make serve' to test the production build locally"
@@ -220,7 +267,7 @@ vercel-build: vercel-install ## Simulate complete Vercel build process
 
 production-check: ## Comprehensive production readiness check
 	@echo "$(BLUE)════════════════════════════════════════════════════════════════$(NC)"
-	@echo "$(YELLOW)🔍 Production Readiness Check...$(NC)"
+	@echo "$(YELLOW)Production Readiness Check...$(NC)"
 	@echo "$(BLUE)════════════════════════════════════════════════════════════════$(NC)"
 	@echo ""
 	@echo "$(YELLOW)1. Checking Node.js version...$(NC)"
@@ -254,7 +301,7 @@ production-check: ## Comprehensive production readiness check
 	@echo "$(GREEN)✓ Production build successful$(NC)"
 	@echo ""
 	@echo "$(GREEN)════════════════════════════════════════════════════════════════$(NC)"
-	@echo "$(GREEN)✅ All production checks passed!$(NC)"
+	@echo "$(GREEN)✓ All production checks passed!$(NC)"
 	@echo "$(GREEN)Your project is ready for deployment to Vercel$(NC)"
 	@echo "$(GREEN)════════════════════════════════════════════════════════════════$(NC)"
 
