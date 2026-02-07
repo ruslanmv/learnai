@@ -1,0 +1,109 @@
+# =============================================================================
+# LearnAI A2A (Agent-to-Agent) Configuration
+# =============================================================================
+# This configuration defines A2A agents that can be registered with
+# MCP Context Forge to enable agent-to-agent communication.
+#
+# Registration:
+#   curl -X POST "http://localhost:4444/a2a" \
+#     -H "Authorization: Bearer $TOKEN" \
+#     -H "Content-Type: application/json" \
+#     -d @a2a-agent-config.yaml
+#
+# Reference: https://github.com/ruslanmv/mcp-context-forge
+# =============================================================================
+
+agents:
+  # ─────────────────────────────────────────────────────────────────────────
+  # LearnAI Tutor Matching Agent
+  # ─────────────────────────────────────────────────────────────────────────
+  # This agent handles AI-powered professor matching. Other agents can
+  # invoke it to find the best professor for a student's learning needs.
+  - name: learnai-tutor-matching
+    url: "http://localhost:9200/a2a"
+    description: >
+      AI-powered tutor matching agent. Accepts a student's learning goals
+      and preferences, searches the professor database, and returns
+      personalized recommendations with explanations.
+    auth_type: bearer
+    auth_value: "${LEARNAI_A2A_TOKEN}"
+    visibility: public
+    tags:
+      - education
+      - tutoring
+      - ai-matching
+      - recommendations
+    enabled: true
+
+  # ─────────────────────────────────────────────────────────────────────────
+  # LearnAI Booking Agent
+  # ─────────────────────────────────────────────────────────────────────────
+  # This agent handles session booking workflows. Other agents can
+  # invoke it to create, modify, or cancel tutoring sessions.
+  - name: learnai-booking-agent
+    url: "http://localhost:9201/a2a"
+    description: >
+      Session booking agent for the LearnAI tutoring marketplace.
+      Handles creating bookings, checking availability, managing
+      scheduling conflicts, and processing cancellations.
+    auth_type: bearer
+    auth_value: "${LEARNAI_A2A_TOKEN}"
+    visibility: public
+    tags:
+      - education
+      - booking
+      - scheduling
+    enabled: true
+
+  # ─────────────────────────────────────────────────────────────────────────
+  # LearnAI Classroom Agent
+  # ─────────────────────────────────────────────────────────────────────────
+  # This agent manages interactive classroom sessions including
+  # whiteboard collaboration and meeting links.
+  - name: learnai-classroom-agent
+    url: "http://localhost:9202/a2a"
+    description: >
+      Classroom session management agent. Sets up interactive
+      tutoring environments with whiteboard collaboration,
+      generates meeting links, and manages session resources.
+    auth_type: bearer
+    auth_value: "${LEARNAI_A2A_TOKEN}"
+    visibility: team
+    tags:
+      - education
+      - classroom
+      - collaboration
+      - whiteboard
+    enabled: true
+
+# =============================================================================
+# Gateway Settings for A2A
+# =============================================================================
+# These environment variables must be set on the MCP Context Forge gateway:
+#
+#   MCPGATEWAY_A2A_ENABLED=true
+#   MCPGATEWAY_A2A_MAX_AGENTS=100
+#   MCPGATEWAY_A2A_DEFAULT_TIMEOUT=30
+#   MCPGATEWAY_A2A_MAX_RETRIES=3
+#   MCPGATEWAY_A2A_METRICS_ENABLED=true
+#
+# =============================================================================
+# Registration Commands
+# =============================================================================
+#
+# Register each agent individually:
+#
+#   curl -X POST "http://localhost:4444/a2a" \
+#     -u admin:changeme \
+#     -H "Content-Type: application/json" \
+#     -d '{
+#       "name": "learnai-tutor-matching",
+#       "url": "http://localhost:9200/a2a",
+#       "description": "AI-powered tutor matching agent",
+#       "auth_type": "bearer",
+#       "auth_value": "your-token",
+#       "visibility": "public",
+#       "tags": ["education", "tutoring", "ai-matching"]
+#     }'
+#
+# =============================================================================
