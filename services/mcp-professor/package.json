@@ -1,0 +1,21 @@
+{
+  "name": "mcp-professor-interview",
+  "version": "1.0.0",
+  "type": "module",
+  "private": true,
+  "description": "MCP server for AI-powered technical interview coaching via Professor Nova",
+  "scripts": {
+    "dev": "node --loader ts-node/esm src/index.ts",
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/index.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "openai": "^4.0.0",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "ts-node": "^10.9.2",
+    "typescript": "^5.5.0"
+  }
+}
