@@ -1,0 +1,12 @@
+{
+  "agent": {
+    "name": "professor-nova-interview",
+    "description": "AI professor that runs a technical interview from a job description (one-question-at-a-time).",
+    "agent_type": "jsonrpc",
+    "endpoint_url": "http://localhost:9999/",
+    "tags": ["teacher", "interview", "technical", "en"],
+    "protocol_version": "0.1",
+    "visibility": "public",
+    "enabled": true
+  }
+}
