@@ -110,3 +110,15 @@ coverage
 # Temporary folders
 tmp/
 temp/
+
+# Python virtual environments
+.venv-mcp/
+__pycache__/
+*.pyc
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# MCP Context Forge (cloned dependency - not version controlled)
+mcp-context-forge/

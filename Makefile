@@ -5,11 +5,16 @@
 # License: MIT
 # =============================================================================
 
-.PHONY: help install install-deps dev build start serve lint lint-fix format format-check type-check test test-watch \
-	clean clean-all prisma-generate prisma-push prisma-migrate prisma-migrate-deploy prisma-studio prisma-seed prisma-reset \
-	db-up db-down db-logs db-reset db-wait db-setup docker-build docker-up docker-down docker-logs \
+.PHONY: help install install-deps install-mcp install-mcp-server install-mcp-professor install-contextforge \
+	dev build start serve lint lint-fix format format-check type-check \
+	test test-watch test-mcp test-all \
+	clean clean-all clean-mcp \
+	prisma-generate prisma-push prisma-migrate prisma-migrate-deploy prisma-studio prisma-seed prisma-reset \
+	db-up db-down db-logs db-reset db-wait db-setup \
+	docker-build docker-up docker-down docker-logs \
 	deploy-vercel deploy-vercel-preview setup-env check-env validate pre-commit \
-	vercel-install vercel-build production-check checkup setup info version
+	vercel-install vercel-build production-check checkup setup info version \
+	mcp-dev mcp-professor-dev contextforge-dev
 
 # Default target
 .DEFAULT_GOAL := help
@@ -25,6 +30,14 @@ NC := \033[0m # No Color
 PROJECT_NAME := learnai-portal
 NODE_VERSION := 20
 NPM := npm
+PYTHON := python3
+PIP := pip3
+
+# MCP Server paths
+MCP_SERVER_DIR := mcp-server
+MCP_PROFESSOR_DIR := services/mcp-professor
+MCP_CONTEXTFORGE_DIR := mcp-context-forge
+MCP_VENV := .venv-mcp
 
 ##@ General
 
@@ -37,7 +50,7 @@ help: ## Display this help message
 
 ##@ Setup & Installation
 
-install: install-deps setup-env db-up db-wait db-setup prisma-generate prisma-migrate-deploy prisma-seed ## One-command local install (deps + env + db + prisma)
+install: install-deps install-mcp setup-env db-up db-wait db-setup prisma-generate prisma-migrate-deploy prisma-seed ## Full install (Node + MCP servers + env + db)
 	@echo "$(GREEN)════════════════════════════════════════════════════════════════$(NC)"
 	@echo "$(GREEN)✓ Install complete!$(NC)"
 	@echo "$(YELLOW)Next: run 'make serve' for production, or 'make dev' for development.$(NC)"
@@ -47,6 +60,45 @@ install-deps: ## Install Node.js dependencies
 	@echo "$(GREEN)Installing dependencies...$(NC)"
 	@$(NPM) install
 	@echo "$(GREEN)✓ Dependencies installed successfully$(NC)"
+
+install-mcp: install-mcp-server install-mcp-professor install-contextforge ## Install all MCP components (venv + servers + gateway)
+	@echo "$(GREEN)════════════════════════════════════════════════════════════════$(NC)"
+	@echo "$(GREEN)✓ All MCP components installed!$(NC)"
+	@echo "$(GREEN)════════════════════════════════════════════════════════════════$(NC)"
+
+install-mcp-server: ## Install LearnAI Python MCP server in virtual env
+	@echo "$(GREEN)Installing LearnAI MCP server...$(NC)"
+	@if [ ! -d "$(MCP_VENV)" ]; then \
+		echo "$(YELLOW)Creating Python virtual environment at $(MCP_VENV)...$(NC)"; \
+		$(PYTHON) -m venv $(MCP_VENV); \
+	fi
+	@. $(MCP_VENV)/bin/activate && \
+		pip install --upgrade pip setuptools wheel && \
+		pip install -e "$(MCP_SERVER_DIR)[dev]"
+	@echo "$(GREEN)✓ LearnAI MCP server installed ($(MCP_VENV))$(NC)"
+
+install-mcp-professor: ## Install Professor Interview MCP server (TypeScript)
+	@echo "$(GREEN)Installing Professor Interview MCP server...$(NC)"
+	@if [ -d "$(MCP_PROFESSOR_DIR)" ]; then \
+		cd $(MCP_PROFESSOR_DIR) && $(NPM) install; \
+		echo "$(GREEN)✓ Professor MCP server installed$(NC)"; \
+	else \
+		echo "$(YELLOW)⚠ Professor MCP server directory not found: $(MCP_PROFESSOR_DIR)$(NC)"; \
+	fi
+
+install-contextforge: ## Clone and install MCP Context Forge gateway
+	@echo "$(GREEN)Installing MCP Context Forge...$(NC)"
+	@if [ ! -d "$(MCP_CONTEXTFORGE_DIR)" ]; then \
+		echo "$(YELLOW)Cloning MCP Context Forge...$(NC)"; \
+		git clone https://github.com/ruslanmv/mcp-context-forge.git $(MCP_CONTEXTFORGE_DIR); \
+	fi
+	@. $(MCP_VENV)/bin/activate && \
+		pip install -e "$(MCP_CONTEXTFORGE_DIR)"
+	@if [ ! -f "$(MCP_CONTEXTFORGE_DIR)/.env" ] && [ -f "$(MCP_CONTEXTFORGE_DIR)/.env.example" ]; then \
+		cp $(MCP_CONTEXTFORGE_DIR)/.env.example $(MCP_CONTEXTFORGE_DIR)/.env; \
+		echo "$(YELLOW)Created $(MCP_CONTEXTFORGE_DIR)/.env from example (edit passwords before production use)$(NC)"; \
+	fi
+	@echo "$(GREEN)✓ MCP Context Forge installed$(NC)"
 
 setup-env: ## Create .env.local with safe local defaults
 	@echo "$(YELLOW)Setting up environment variables...$(NC)"
@@ -82,6 +134,22 @@ serve: check-env db-up db-wait db-setup prisma-migrate-deploy build ## Build the
 	@echo "$(GREEN)Starting production server...$(NC)"
 	@$(NPM) run start
 
+mcp-dev: ## Start LearnAI MCP server in HTTP mode (port 9100)
+	@echo "$(GREEN)Starting LearnAI MCP server (HTTP)...$(NC)"
+	@. $(MCP_VENV)/bin/activate && learnai-mcp --transport http --port 9100
+
+mcp-professor-dev: ## Start Professor MCP server in dev mode
+	@echo "$(GREEN)Starting Professor MCP server...$(NC)"
+	@cd $(MCP_PROFESSOR_DIR) && $(NPM) run dev
+
+contextforge-dev: ## Start MCP Context Forge gateway (port 4444)
+	@echo "$(GREEN)Starting MCP Context Forge gateway...$(NC)"
+	@. $(MCP_VENV)/bin/activate && cd $(MCP_CONTEXTFORGE_DIR) && \
+		BASIC_AUTH_PASSWORD=changeme \
+		MCPGATEWAY_UI_ENABLED=true \
+		MCPGATEWAY_ADMIN_API_ENABLED=true \
+		mcpgateway --host 0.0.0.0 --port 4444
+
 ##@ Code Quality
 
 lint: ## Run ESLint
@@ -111,13 +179,22 @@ validate: lint type-check format-check ## Run all validation checks (lint + type
 
 ##@ Testing
 
-test: ## Run tests (placeholder - add your test framework)
-	@echo "$(YELLOW)Running tests...$(NC)"
-	@echo "$(YELLOW)⚠ No tests configured yet. Add Jest or Vitest to package.json$(NC)"
+test: test-mcp ## Run all tests (MCP server + A2A agent + catalog health)
+	@echo "$(GREEN)✓ All tests passed$(NC)"
+
+test-mcp: ## Run MCP server, A2A agent, and ContextForge health tests
+	@echo "$(YELLOW)Running MCP & A2A health tests...$(NC)"
+	@. $(MCP_VENV)/bin/activate && \
+		$(PYTHON) -m pytest tests/ -v --tb=short
+	@echo "$(GREEN)✓ MCP tests passed$(NC)"
+
+test-all: test ## Run all test suites
+	@echo "$(GREEN)✓ All test suites passed$(NC)"
 
 test-watch: ## Run tests in watch mode
 	@echo "$(YELLOW)Running tests in watch mode...$(NC)"
-	@echo "$(YELLOW)⚠ No tests configured yet$(NC)"
+	@. $(MCP_VENV)/bin/activate && \
+		$(PYTHON) -m pytest tests/ -v --tb=short -f
 
 ##@ Database (Prisma)
 
@@ -172,7 +249,15 @@ clean: ## Clean build artifacts and cache
 	@rm -rf .vercel
 	@echo "$(GREEN)✓ Clean complete$(NC)"
 
-clean-all: clean ## Clean everything including node_modules
+clean-mcp: ## Clean MCP virtual env and build artifacts
+	@echo "$(YELLOW)Cleaning MCP environments...$(NC)"
+	@rm -rf $(MCP_VENV)
+	@rm -rf $(MCP_SERVER_DIR)/build $(MCP_SERVER_DIR)/dist $(MCP_SERVER_DIR)/*.egg-info $(MCP_SERVER_DIR)/src/*.egg-info
+	@rm -rf $(MCP_PROFESSOR_DIR)/node_modules $(MCP_PROFESSOR_DIR)/dist
+	@rm -rf .pytest_cache tests/__pycache__ tests/.pytest_cache
+	@echo "$(GREEN)✓ MCP clean complete$(NC)"
+
+clean-all: clean clean-mcp ## Clean everything including node_modules and venvs
 	@echo "$(RED)Cleaning everything (including node_modules)...$(NC)"
 	@rm -rf node_modules
 	@rm -rf package-lock.json
@@ -331,9 +416,19 @@ info: ## Show project information
 	@echo "$(GREEN)Website:$(NC) ruslanmv.com"
 	@echo "$(GREEN)Node Version:$(NC) $(NODE_VERSION)"
 	@echo "$(GREEN)Package Manager:$(NC) $(NPM)"
+	@echo "$(GREEN)MCP Venv:$(NC) $(MCP_VENV)"
+	@echo "$(GREEN)MCP Server:$(NC) $(MCP_SERVER_DIR)"
+	@echo "$(GREEN)Professor MCP:$(NC) $(MCP_PROFESSOR_DIR)"
+	@echo "$(GREEN)Context Forge:$(NC) $(MCP_CONTEXTFORGE_DIR)"
 	@echo "$(BLUE)════════════════════════════════════════════════════════════════$(NC)"
 	@$(NPM) --version
 	@node --version
+	@$(PYTHON) --version
+	@if [ -d "$(MCP_VENV)" ]; then \
+		echo "$(GREEN)✓ MCP venv exists$(NC)"; \
+	else \
+		echo "$(YELLOW)⚠ MCP venv not found. Run 'make install-mcp' to create it$(NC)"; \
+	fi
 
 version: ## Show version information
 	@echo "$(GREEN)LearnAI Version:$(NC)"
