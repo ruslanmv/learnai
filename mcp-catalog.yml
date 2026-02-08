@@ -1,0 +1,86 @@
+# =============================================================================
+# MCP Context Forge - LearnAI Catalog
+# =============================================================================
+# This catalog defines the MCP servers and tools that the LearnAI platform
+# exposes to AI clients through the MCP Context Forge gateway.
+#
+# Usage:
+#   Set MCPGATEWAY_CATALOG_FILE=mcp-catalog.yml in the gateway configuration.
+#   Then register entries via POST /catalog/{id}/register
+#
+# Reference: https://github.com/ruslanmv/mcp-context-forge
+# =============================================================================
+
+catalog_servers:
+  # ─────────────────────────────────────────────────────────────────────────
+  # LearnAI Core Platform
+  # ─────────────────────────────────────────────────────────────────────────
+  - id: learnai-tutoring
+    name: "LearnAI Tutoring Platform"
+    category: "Education"
+    url: "http://localhost:9100/sse"
+    auth_type: "API Key"
+    provider: "LearnAI"
+    description: "AI-powered tutoring marketplace connecting students with expert professors"
+    requires_api_key: true
+    tags:
+      - education
+      - tutoring
+      - ai-matching
+      - booking
+      - professors
+    secure: true
+
+  # ─────────────────────────────────────────────────────────────────────────
+  # LearnAI AI Recommendations
+  # ─────────────────────────────────────────────────────────────────────────
+  - id: learnai-recommendations
+    name: "LearnAI Professor Recommendations"
+    category: "Education"
+    url: "http://localhost:9101/sse"
+    auth_type: "API Key"
+    provider: "LearnAI"
+    description: "AI-powered professor recommendation engine using GPT-4 for intelligent matching"
+    requires_api_key: true
+    tags:
+      - education
+      - ai
+      - recommendations
+      - matching
+      - openai
+
+  # ─────────────────────────────────────────────────────────────────────────
+  # LearnAI Booking & Scheduling
+  # ─────────────────────────────────────────────────────────────────────────
+  - id: learnai-bookings
+    name: "LearnAI Booking System"
+    category: "Education"
+    url: "http://localhost:9102/sse"
+    auth_type: "API Key"
+    provider: "LearnAI"
+    description: "Session booking and scheduling system for tutoring marketplace"
+    requires_api_key: true
+    tags:
+      - education
+      - booking
+      - scheduling
+      - payments
+      - calendar
+
+  # ─────────────────────────────────────────────────────────────────────────
+  # LearnAI Classroom Tools
+  # ─────────────────────────────────────────────────────────────────────────
+  - id: learnai-classroom
+    name: "LearnAI Classroom"
+    category: "Education"
+    url: "http://localhost:9103/sse"
+    auth_type: "API Key"
+    provider: "LearnAI"
+    description: "Interactive classroom tools with whiteboard and real-time collaboration"
+    requires_api_key: true
+    tags:
+      - education
+      - classroom
+      - whiteboard
+      - collaboration
+      - real-time
