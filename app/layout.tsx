@@ -3,18 +3,16 @@ import type { ReactNode } from "react";
 import { SessionProviderWrapper } from "@/components/SessionProviderWrapper";
 
 export const metadata = {
-  title: "LearnAI - Connect with Expert Professors",
+  title: "LearnAI | YourTeacher lifelong AI education",
   description:
-    "AI-powered platform connecting students with expert professors for personalized 1-on-1 learning sessions with integrated whiteboard and payment systems.",
+    "Age-adaptive lifelong AI education platform for children, students, professionals, and senior learners.",
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
-      <body className="font-sans min-h-screen bg-gray-50 antialiased">
-        <SessionProviderWrapper>
-          {children}
-        </SessionProviderWrapper>
+      <body className="min-h-screen bg-gray-50 font-sans antialiased">
+        <SessionProviderWrapper>{children}</SessionProviderWrapper>
       </body>
     </html>
   );
